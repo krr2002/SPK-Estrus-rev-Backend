@@ -1,0 +1,21 @@
+{
+  "name": "SPK-Estrus-rev-Backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@8.6.1+sha512.3f9e23f20bdbf7a27b87b804383f1dafdb5cb35cdc40fce590aff2215255446ff595878ee4f33429e6a0e7c3882b1ae926514f6fea6a5ba75e52f87bfc2592e7",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3"
+  }
+}
