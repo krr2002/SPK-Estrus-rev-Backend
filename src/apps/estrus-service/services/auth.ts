@@ -7,7 +7,7 @@ import {Vardec} from '@src/utils/vardec'
 
 
 export class AuthService {
-  private readonly userRepo: UserRepository;
+  private readonly userRepo: UserRepository
 
   constructor(ru: UserRepository) {
     this.userRepo = ru

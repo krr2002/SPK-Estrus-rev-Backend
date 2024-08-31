@@ -1,22 +1,13 @@
-export type CreateParamType = {
-  username: string
-  fullName: string
-  password: string
-}
-
-export type UserDataType = {
+export type DSSParamDataType = {
   id: string
-  roleId: string
-  username: string
-  fullName: string
-  password: string
-  tokenReset: string
-  lastAccessed: string
+  name: string
   createdAt: string
   updatedAt: string
   deletedAt: string
 }
 
-export interface UserRepository {
-  create(arg: CreateParamType): Promise<void>
+export interface DSSParamRepository {
+  create(name: string): Promise<void>
+  getAll(): Promise<DSSParamDataType[]>
+  getById(id: string): Promise<DSSParamDataType|null>
 }

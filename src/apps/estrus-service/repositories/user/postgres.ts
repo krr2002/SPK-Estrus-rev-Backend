@@ -1,6 +1,6 @@
 import {CreateParamType, UserDataType, UserRepository} from './interface'
 import {Pool} from 'pg'
-import { v4 as uuidv4 } from 'uuid'
+import { v7 as uuidv7 } from 'uuid'
 
 
 export class PostgresUserRepository implements UserRepository {
@@ -46,7 +46,7 @@ export class PostgresUserRepository implements UserRepository {
         )
       `,
       values: [
-        uuidv4(),
+        uuidv7(),
         arg.nik.toUpperCase(),
         arg.fullName.toUpperCase(),
         arg.email.toLowerCase(),
@@ -103,7 +103,7 @@ export class PostgresUserRepository implements UserRepository {
         )
       `,
       values: [
-        uuidv4(),
+        uuidv7(),
         arg.nik.toUpperCase(),
         arg.fullName.toUpperCase(),
         arg.email.toLowerCase(),
@@ -160,7 +160,7 @@ export class PostgresUserRepository implements UserRepository {
         )
       `,
       values: [
-        uuidv4(),
+        uuidv7(),
         arg.nik.toUpperCase(),
         arg.fullName.toUpperCase(),
         arg.email.toLowerCase(),
@@ -184,27 +184,7 @@ export class PostgresUserRepository implements UserRepository {
   getByEmail = async (email: string): Promise<UserDataType|null> => {
     const q = {
       name: 'userGetByEmail',
-      text: `
-        SELECT
-          id,
-          role_id,
-          nik,
-          full_name,
-          email,
-          phone,
-          province,
-          city,
-          district,
-          subdistrict,
-          address,
-          password,
-          token_reset,
-          last_accessed,
-          created_at,
-          updated_at,
-          deleted_at
-        FROM users WHERE email = $1::text AND deleted_at IS NULL
-      `,
+      text: `SELECT * FROM users WHERE email = $1::text AND deleted_at IS NULL`,
       values: [email.toLowerCase()]
     }
     try {
