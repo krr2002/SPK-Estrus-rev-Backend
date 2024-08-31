@@ -5,9 +5,14 @@ import {RegisterDTO} from '@src/apps/estrus-service/controllers/auth/dto'
 import {resErr} from '@src/utils/response'
 
 const registerSchema = Joi.object<RegisterDTO>({
-  username: Joi.string().alphanum().min(5).required(),
-  password: Joi.string().min(8).max(32).required(),
+  nik: Joi.string().regex(/^\d+$/).length(16).required(),
   fullName: Joi.string().min(1).required(),
+  email: Joi.string().email().required(),
+  phone: Joi.string().regex(/^\+\d+$/).required(),
+  district: Joi.string().min(1).required(),
+  subdistrict: Joi.string().min(1).required(),
+  address: Joi.string(),
+  password: Joi.string().min(8).max(32).required(),
   confirmPassword: Joi.string().min(8).required(),
 })
 

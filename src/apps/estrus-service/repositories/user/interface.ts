@@ -1,14 +1,30 @@
 export type CreateParamType = {
-  username: string
+  nik: string
   fullName: string
+  email: string
+  phone: string
+  country: string
+  province: string
+  city: string
+  district: string
+  subdistrict: string
+  address: string
   password: string
 }
 
 export type UserDataType = {
   id: string
   roleId: string
-  username: string
+  nik: string
   fullName: string
+  email: string
+  phone: string
+  country: string
+  province: string
+  city: string
+  district: string
+  subdistrict: string
+  address: string
   password: string
   tokenReset: string
   lastAccessed: string
@@ -21,5 +37,6 @@ export interface UserRepository {
   createUser(arg: CreateParamType): Promise<void>
   createAdmin(arg: CreateParamType): Promise<void>
   createExpert(arg: CreateParamType): Promise<void>
-  getByUsername(username: string): Promise<UserDataType|null>
+  getByEmail(username: string): Promise<UserDataType|null>
+  getByPhone(username: string): Promise<UserDataType|null>
 }

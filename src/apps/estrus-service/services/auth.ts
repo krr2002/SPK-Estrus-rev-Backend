@@ -1,4 +1,4 @@
-import {UserDataType, UserRepository} from '@src/apps/estrus-service/repositories/user/interface'
+import {UserRepository} from '@src/apps/estrus-service/repositories/user/interface'
 import {LoginDTO, RegisterDTO} from '@src/apps/estrus-service/controllers/auth/dto'
 import {ERR_ACCESS_DENIED, ERR_DUPLICATE, ERR_NO_ROW, RestResponseType} from '@src/utils/response'
 import bcrypt from 'bcrypt'
@@ -15,10 +15,16 @@ export class AuthService {
 
   registerUser = async (param: RegisterDTO): Promise<RestResponseType> => {
     try {
-      const userData = await this.userRepo.getByUsername(param.username)
+      let userData = await this.userRepo.getByEmail(param.email)
+      if (!userData) userData = await this.userRepo.getByPhone(param.phone)
       if (userData) throw ERR_DUPLICATE
       param.password = await bcrypt.hash(param.password, 10)
-      const res = await this.userRepo.createUser(param)
+      await this.userRepo.createUser({
+        ...param,
+        city: "KABUPTEN MERAUKE",
+        province: "PAPUA SELATAN",
+        country: "INDONESIA",
+      })
       return {message: 'CREATED', data: {}}
     } catch (err) {
       throw err
@@ -26,10 +32,16 @@ export class AuthService {
   }
   registerAdmin = async (param: RegisterDTO): Promise<RestResponseType> => {
     try {
-      const userData = await this.userRepo.getByUsername(param.username)
+      let userData = await this.userRepo.getByEmail(param.email)
+      if (!userData) userData = await this.userRepo.getByPhone(param.phone)
       if (userData) throw ERR_DUPLICATE
       param.password = await bcrypt.hash(param.password, 10)
-      const res = await this.userRepo.createAdmin(param)
+      await this.userRepo.createAdmin({
+        ...param,
+        city: "KABUPTEN MERAUKE",
+        province: "PAPUA SELATAN",
+        country: "INDONESIA",
+      })
       return {message: 'CREATED', data: {}}
     } catch (err) {
       throw err
@@ -37,10 +49,16 @@ export class AuthService {
   }
   registerExpert = async (param: RegisterDTO): Promise<RestResponseType> => {
     try {
-      const userData = await this.userRepo.getByUsername(param.username)
+      let userData = await this.userRepo.getByEmail(param.email)
+      if (!userData) userData = await this.userRepo.getByPhone(param.phone)
       if (userData) throw ERR_DUPLICATE
       param.password = await bcrypt.hash(param.password, 10)
-      const res = await this.userRepo.createExpert(param)
+      await this.userRepo.createExpert({
+        ...param,
+        city: "KABUPTEN MERAUKE",
+        province: "PAPUA SELATAN",
+        country: "INDONESIA",
+      })
       return {message: 'CREATED', data: {}}
     } catch (err) {
       throw err
@@ -48,7 +66,8 @@ export class AuthService {
   }
   login = async (param: LoginDTO): Promise<RestResponseType> => {
     try {
-      const res = await this.userRepo.getByUsername(param.username)
+      let res = await this.userRepo.getByEmail(param.credential)
+      if (!res) res = await this.userRepo.getByPhone(param.credential)
       if (!res) throw ERR_NO_ROW
       if (!bcrypt.compare(param.password, res.password)) throw ERR_ACCESS_DENIED
       res.tokenReset = ''
