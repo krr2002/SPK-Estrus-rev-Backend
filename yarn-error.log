@@ -1,0 +1,59 @@
+Arguments: 
+  /home/novando/.nvm/versions/node/v18.20.3/bin/node /home/novando/.cache/node/corepack/v1/yarn/1.22.19/bin/yarn.js add bycript
+
+PATH: 
+  /home/novando/.local/bin:/home/novando/.gvm/pkgsets/go1.21.6/global/bin:/home/novando/.gvm/gos/go1.21.6/bin:/home/novando/.gvm/pkgsets/go1.21.6/global/overlay/bin:/home/novando/.gvm/bin:/home/novando/.phpenv/shims:/home/novando/.phpenv/bin:/home/novando/.sdkman/candidates/java/current/bin:/home/novando/.nvm/versions/node/v18.20.3/bin:/opt/google-cloud-cli/bin:/home/novando/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/novando/Documents/works/arutek/backend/SPK-Estrus-rev-Backend/node_modules/.bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.20.3
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/bycript: Not found
+      at params.callback [as _callback] (/home/novando/.cache/node/corepack/v1/yarn/1.22.19/lib/cli.js:66145:18)
+      at self.callback (/home/novando/.cache/node/corepack/v1/yarn/1.22.19/lib/cli.js:140890:22)
+      at Request.emit (node:events:517:28)
+      at Request.<anonymous> (/home/novando/.cache/node/corepack/v1/yarn/1.22.19/lib/cli.js:141862:10)
+      at Request.emit (node:events:517:28)
+      at IncomingMessage.<anonymous> (/home/novando/.cache/node/corepack/v1/yarn/1.22.19/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:631:28)
+      at IncomingMessage.emit (node:events:529:35)
+      at endReadableNT (node:internal/streams/readable:1400:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "spk-estrus-rev-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "body-parser": "^1.20.2",
+      "cors": "^2.8.5",
+      "express": "^4.19.2"
+    },
+    "devDependencies": {
+      "@types/node": "^22.4.2",
+      "nodemon": "^3.1.4",
+      "tsx": "^4.17.0",
+      "typescript": "^5.5.4"
+    },
+    "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
