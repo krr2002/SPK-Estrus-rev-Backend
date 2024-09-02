@@ -218,7 +218,7 @@ export class PostgresUserRepository implements UserRepository {
   }
   getByPhone = async (phone: string): Promise<UserDataType|null> => {
     const q = {
-      name: 'userGetByEmail',
+      name: 'userGetByPhone',
       text: `
           SELECT
               id,

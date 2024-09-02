@@ -12,20 +12,9 @@ export type CreateParamType = {
   password: string
 }
 
-export type UserDataType = {
+export type UserDataType = CreateParamType & {
   id: string
   roleId: string
-  nik: string
-  fullName: string
-  email: string
-  phone: string
-  country: string
-  province: string
-  city: string
-  district: string
-  subdistrict: string
-  address: string
-  password: string
   tokenReset: string
   lastAccessed: string
   createdAt: string
