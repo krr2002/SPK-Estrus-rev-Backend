@@ -18,10 +18,10 @@ const main = async () => {
     max: Vardec.getNumber('postgres.pool'),
   })
 
-  const dbNoSql = firestore('./config/service-account.local.json')
-
-  const coba = await dbNoSql.collection('coba').get()
-  console.log(coba)
+  // const dbNoSql = firestore('./config/service-account.local.json')
+  //
+  // const coba = await dbNoSql.collection('coba').get()
+  // console.log(coba)
   const app = express()
   app.use(express.json())
   app.use('/v1', initEstrus(dbSql))
