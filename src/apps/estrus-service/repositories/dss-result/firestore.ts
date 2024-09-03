@@ -1,8 +1,7 @@
 import {CreateParamType, DSSResultDataType, DSSResultRepository} from './interface'
 import {CollectionReference, Firestore} from '@google-cloud/firestore'
-import {stripDash, stripDashAll} from '@src/utils/uuid'
+import {stripDash} from '@src/utils/uuid'
 import dayjs from 'dayjs'
-import {ERR_DUPLICATE} from '@src/utils/response'
 import {v7 as uuidv7} from 'uuid'
 
 
