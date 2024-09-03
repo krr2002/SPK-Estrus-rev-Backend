@@ -5,7 +5,14 @@ export type DSSLinguisticDataType = {
   minValue: number
   createdAt: string
   updatedAt: string
-  deletedAt: string
+  deletedAt: string|null
+}
+
+export type DSSAllDataType = {
+  langId: string
+  langName: string
+  paramId: string
+  paramName:string
 }
 
 export type CreateParamType = {
@@ -17,4 +24,5 @@ export type CreateParamType = {
 export interface DSSLinguisticRepository {
   create(arg: CreateParamType): Promise<void>
   getAllByParamId(paramId: string): Promise<DSSLinguisticDataType[]>
+  getByIds(ids: string[]): Promise<DSSAllDataType[]>
 }

@@ -19,7 +19,7 @@ export type UserDataType = CreateParamType & {
   lastAccessed: string
   createdAt: string
   updatedAt: string
-  deletedAt: string
+  deletedAt: string|null
 }
 
 export interface UserRepository {

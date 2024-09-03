@@ -17,9 +17,10 @@ export const resErr = (err: any): RestResponseType & {code: number} => {
     if (typeof err.name === 'string') name = err.name
     err = err.message
   }
+  name = name.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase()
   return {
     code,
-    data: err,
+    data: [err],
     message: name,
   }
 }
