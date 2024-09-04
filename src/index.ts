@@ -1,6 +1,7 @@
 import {Vardec} from '@src/utils/vardec'
 import {pgPool} from '@src/utils/postgres'
 import express from 'express'
+import cors from 'cors'
 import {initEstrus} from '@src/apps/estrus-service/init'
 import {firestore} from '@src/utils/firestore'
 
@@ -25,6 +26,7 @@ const main = async () => {
 
   const app = express()
   app.use(express.json())
+  app.use(cors())
   app.use('/v1', initEstrus(dbSql, dbNoSql))
 
   const server = app.listen(Vardec.getNumber('application.port'))
