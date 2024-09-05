@@ -16,18 +16,20 @@ import {RestRuleManagementController} from '@src/apps/estrus-service/controllers
 import {DSSService} from '@src/apps/estrus-service/services/dss'
 import {RestDSSController} from '@src/apps/estrus-service/controllers/dss/rest'
 import {FirestoreDSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/firestore'
+import {PostgresRoleRepository} from '@src/apps/estrus-service/repositories/role/postgres'
 
 
 export const initEstrus = (sql: Pool, noSql: Firestore) => {
   const router = express.Router()
 
   const userRepo = new PostgresUserRepository(sql)
+  const ruleRepo = new PostgresRoleRepository(sql)
   const dssParamRepo = new PostgresDSSParamRepository(sql)
   const dssLangRepo = new PostgresDSSLinguisticRepository(sql)
   const dssRuleRepo = new FirestoreRuleBaseRepository(noSql)
   const dssResRepo = new FirestoreDSSResultRepository(noSql)
 
-  const authServ = new AuthService(userRepo)
+  const authServ = new AuthService(userRepo, ruleRepo)
   const paramMgmtServ = new ParamManagementService(dssParamRepo)
   const langMgmtServ = new LinguisticManagementService(dssLangRepo)
   const ruleMgmtServ = new RuleManagementService(dssRuleRepo)
