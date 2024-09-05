@@ -4,13 +4,16 @@ import {ERR_ACCESS_DENIED, ERR_DUPLICATE, ERR_NO_ROW, RestResponseType} from '@s
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {Vardec} from '@src/utils/vardec'
+import {RoleRepository} from '@src/apps/estrus-service/repositories/role/interface'
 
 
 export class AuthService {
   private readonly userRepo: UserRepository
+  private readonly roleRepo: RoleRepository
 
-  constructor(ru: UserRepository) {
+  constructor(ru: UserRepository, rr: RoleRepository) {
     this.userRepo = ru
+    this.roleRepo = rr
   }
 
   registerUser = async (param: RegisterDTO): Promise<RestResponseType> => {
@@ -70,9 +73,11 @@ export class AuthService {
       if (!res) res = await this.userRepo.getByPhone(param.credential)
       if (!res) throw ERR_NO_ROW
       if (!bcrypt.compare(param.password, res.password)) throw ERR_ACCESS_DENIED
+      const roleData = await this.roleRepo.getById(res.roleId)
+      if (!roleData) throw ERR_ACCESS_DENIED
       res.tokenReset = ''
       res.password = ''
-      const token = jwt.sign(res, Vardec.getString('application.jwtSecret'))
+      const token = jwt.sign({...res, roleName: roleData.name}, Vardec.getString('application.jwtSecret'))
       return {message: 'SUCCESS', data: {token} }
     } catch (err) {
       throw err
