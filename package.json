@@ -1,21 +1,44 @@
 {
-  "name": "SPK-Estrus-rev-Backend",
+  "name": "spk-estrus-rev-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "dev": "nodemon ./src/index.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node .",
+    "migrate:up": "node-pg-migrate up -m ./db/postgres/migration",
+    "migrate:down": "node-pg-migrate down -m ./db/postgres/migration",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@8.6.1+sha512.3f9e23f20bdbf7a27b87b804383f1dafdb5cb35cdc40fce590aff2215255446ff595878ee4f33429e6a0e7c3882b1ae926514f6fea6a5ba75e52f87bfc2592e7",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "@google-cloud/firestore": "^7.9.0",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
     "express": "^4.19.2",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.3"
-  }
+    "pg": "^8.12.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.4.2",
+    "@types/pg": "^8.11.8",
+    "@types/uuid": "^10.0.0",
+    "node-pg-migrate": "^7.6.1",
+    "nodemon": "^3.1.4",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "pnpm@8.6.1+sha512.3f9e23f20bdbf7a27b87b804383f1dafdb5cb35cdc40fce590aff2215255446ff595878ee4f33429e6a0e7c3882b1ae926514f6fea6a5ba75e52f87bfc2592e7"
 }
