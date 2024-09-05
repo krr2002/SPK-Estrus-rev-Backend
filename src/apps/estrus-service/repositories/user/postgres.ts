@@ -184,6 +184,43 @@ export class PostgresUserRepository implements UserRepository {
       throw err
     }
   }
+  getAllNonAdmin = async (): Promise<UserDataType[]> => {
+    const q = {
+      name: 'userGetAllNonAdmin',
+      text: `SELECT * FROM users WHERE role_id != '08eaee34-cc4d-4aad-b95a-7e0e077efb34' AND deleted_at IS NULL`,
+    }
+    try {
+      const client = await this.pool.connect()
+      const res = await client.query(q)
+      client.release()
+      const result: UserDataType[] = []
+      for (const user of res.rows) {
+        result.push({
+          id: user.id,
+          roleId: user.role_id,
+          nik: user.nik,
+          fullName: user.full_name,
+          email: user.email,
+          phone: user.phone,
+          country: user.country,
+          province: user.province,
+          city: user.city,
+          district: user.district,
+          subdistrict: user.subdistrict,
+          address: user.address,
+          password: user.password,
+          tokenReset: user.token_reset,
+          lastAccessed: user.last_accessed,
+          createdAt: user.created_at,
+          updatedAt: user.created_at,
+          deletedAt: user.deleted_at,
+        })
+      }
+      return result
+    } catch (err) {
+      throw err
+    }
+  }
   getByEmail = async (email: string): Promise<UserDataType|null> => {
     const q = {
       name: 'userGetByEmail',
@@ -196,7 +233,7 @@ export class PostgresUserRepository implements UserRepository {
       client.release()
       if (!res.rows[0]) return null
       return {
-        id: res.rows[0].name,
+        id: res.rows[0].id,
         roleId: res.rows[0].role_id,
         nik: res.rows[0].nik,
         fullName: res.rows[0].full_name,
@@ -222,27 +259,7 @@ export class PostgresUserRepository implements UserRepository {
   getByPhone = async (phone: string): Promise<UserDataType|null> => {
     const q = {
       name: 'userGetByPhone',
-      text: `
-          SELECT
-              id,
-              role_id,
-              nik,
-              full_name,
-              email,
-              phone,
-              province,
-              city,
-              district,
-              subdistrict,
-              address,
-              password,
-              token_reset,
-              last_accessed,
-              created_at,
-              updated_at,
-              deleted_at
-          FROM users WHERE phone = $1::text AND deleted_at IS NULL
-      `,
+      text: `SELECT * FROM users WHERE phone = $1::text AND deleted_at IS NULL`,
       values: [phone]
     }
     try {
@@ -251,7 +268,7 @@ export class PostgresUserRepository implements UserRepository {
       client.release()
       if (!res.rows[0]) return null
       return {
-        id: res.rows[0].name,
+        id: res.rows[0].id,
         roleId: res.rows[0].role_id,
         nik: res.rows[0].nik,
         fullName: res.rows[0].full_name,
