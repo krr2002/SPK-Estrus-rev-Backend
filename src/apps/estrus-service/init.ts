@@ -17,6 +17,8 @@ import {DSSService} from '@src/apps/estrus-service/services/dss'
 import {RestDSSController} from '@src/apps/estrus-service/controllers/dss/rest'
 import {FirestoreDSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/firestore'
 import {PostgresRoleRepository} from '@src/apps/estrus-service/repositories/role/postgres'
+import {UserService} from '@src/apps/estrus-service/services/user'
+import {RestUserController} from '@src/apps/estrus-service/controllers/user/rest'
 
 
 export const initEstrus = (sql: Pool, noSql: Firestore) => {
@@ -30,12 +32,14 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   const dssResRepo = new FirestoreDSSResultRepository(noSql)
 
   const authServ = new AuthService(userRepo, ruleRepo)
+  const userServ = new UserService(userRepo)
   const paramMgmtServ = new ParamManagementService(dssParamRepo)
   const langMgmtServ = new LinguisticManagementService(dssLangRepo)
   const ruleMgmtServ = new RuleManagementService(dssRuleRepo)
   const dssServ = new DSSService(dssRuleRepo, dssLangRepo, dssResRepo)
 
   const authCtrl = new RestAuthController(authServ)
+  const userCtrl = new RestUserController(userServ)
   const paramMgmtCtrl = new RestParamManagementController(paramMgmtServ)
   const langMgmtCtrl = new RestLangManagementController(langMgmtServ)
   const ruleMgmtCtrl = new RestRuleManagementController(ruleMgmtServ)
@@ -45,6 +49,8 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   router.post('/auth/register/admin', authCtrl.registerAdmin)
   router.post('/auth/register/expert', authCtrl.registerExpert)
   router.post('/auth/login', authCtrl.login)
+
+  router.get('/user', userCtrl.getAllNonAdmin)
 
   router.post('/param-management', paramMgmtCtrl.create)
   router.get('/param-management/:id', paramMgmtCtrl.getById)
