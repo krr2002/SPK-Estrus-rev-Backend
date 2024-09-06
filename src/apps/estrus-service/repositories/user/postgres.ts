@@ -259,7 +259,9 @@ export class PostgresUserRepository implements UserRepository {
   getByPhone = async (phone: string): Promise<UserDataType|null> => {
     const q = {
       name: 'userGetByPhone',
-      text: `SELECT * FROM users WHERE phone = $1::text AND deleted_at IS NULL`,
+      text: `SELECT *
+             FROM users
+             WHERE phone = $1::text AND deleted_at IS NULL`,
       values: [phone]
     }
     try {
@@ -287,6 +289,65 @@ export class PostgresUserRepository implements UserRepository {
         updatedAt: res.rows[0].created_at,
         deletedAt: res.rows[0].deleted_at,
       }
+    } catch (err) {
+      throw err
+    }
+  }
+  update = async (id: string, arg: CreateParamType) => {
+    const q = {
+      name: 'userUpdate',
+      text: `
+        UPDATE users
+        SET ( 
+          nik $1::string,
+          full_name $2::string,
+          country $3::string,
+          province $4::string,
+          city $5::string,
+          district $6::string,
+          subdistrict $7::string,
+          address $8::string,
+          updated_at = NOW()
+        )
+        WHERE id = $9::uuid AND deleted_at IS NULL
+      `,
+      values: [
+        arg.nik.toUpperCase(),
+        arg.fullName.toUpperCase(),
+        arg.country.toUpperCase(),
+        arg.province.toUpperCase(),
+        arg.city.toUpperCase(),
+        arg.district.toUpperCase(),
+        arg.subdistrict.toUpperCase(),
+        arg.address.toUpperCase(),
+        id,
+      ]
+    }
+    try {
+      const client = await this.pool.connect()
+      await client.query(q)
+      client.release()
+    } catch (err) {
+      throw err
+    }
+  }
+  delete = async (id: string) => {
+    const q = {
+      name: 'userDelete',
+      text: `
+        UPDATE users
+        SET (
+          deleted_at = NOW(),
+          updated_at = NOW(),
+        )
+        WHERE id = $1::uuid AND deleted_at IS NULL
+      `,
+      values: [id]
+    }
+    try {
+      const client = await this.pool.connect()
+      await client.query(q)
+      client.release()
     } catch (err) {
       throw err
     }

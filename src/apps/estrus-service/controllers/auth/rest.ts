@@ -1,7 +1,7 @@
 import {AuthService} from '@src/apps/estrus-service/services/auth'
 import {Request, Response} from 'express'
 import Joi from 'joi'
-import {RegisterDTO} from '@src/apps/estrus-service/controllers/auth/dto'
+import {RegisterDTO} from './dto'
 import {resErr} from '@src/utils/response'
 
 const registerSchema = Joi.object<RegisterDTO>({
@@ -60,6 +60,15 @@ export class RestAuthController {
     try {
       const result = await this.authService.login(req.body)
       return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
+  // TODO: implementasi logicnya kalo udah simpen session
+  logout = async (req: Request, res: Response) => {
+    try {
+      return res.status(200).send({message: "SUCCESS", data: {}})
     } catch (err: any) {
       const {code, message, data} = resErr(err)
       res.status(code).send({data, message})

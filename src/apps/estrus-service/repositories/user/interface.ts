@@ -1,14 +1,17 @@
-export type CreateParamType = {
+export type UpdateParamType = {
   nik: string
   fullName: string
-  email: string
-  phone: string
   country: string
   province: string
   city: string
   district: string
   subdistrict: string
   address: string
+}
+
+export type CreateParamType = UpdateParamType & {
+  email: string
+  phone: string
   password: string
 }
 
@@ -29,4 +32,6 @@ export interface UserRepository {
   getAllNonAdmin(): Promise<UserDataType[]>
   getByEmail(username: string): Promise<UserDataType|null>
   getByPhone(username: string): Promise<UserDataType|null>
+  update(id: string, arg: UpdateParamType): Promise<void>
+  delete(id: string): Promise<void>
 }

@@ -49,8 +49,11 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   router.post('/auth/register/admin', authCtrl.registerAdmin)
   router.post('/auth/register/expert', authCtrl.registerExpert)
   router.post('/auth/login', authCtrl.login)
+  router.delete('/auth/logout', authCtrl.logout)
 
   router.get('/user', userCtrl.getAllNonAdmin)
+  router.put('/user/:userId', userCtrl.update)
+  router.delete('/user/:userId', userCtrl.delete)
 
   router.post('/param-management', paramMgmtCtrl.create)
   router.get('/param-management/:id', paramMgmtCtrl.getById)
