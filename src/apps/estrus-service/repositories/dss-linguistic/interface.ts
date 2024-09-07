@@ -22,7 +22,7 @@ export type CreateParamType = UpdateParamType & {
 }
 
 export interface DSSLinguisticRepository {
-  create(arg: CreateParamType): Promise<void>
+  create(arg: CreateParamType): Promise<string>
   getAllByParamId(paramId: string): Promise<DSSLinguisticDataType[]>
   getByIds(ids: string[]): Promise<DSSAllDataType[]>
   update(id: string, arg: UpdateParamType): Promise<void>

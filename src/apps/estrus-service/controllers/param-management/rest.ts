@@ -3,6 +3,12 @@ import Joi from 'joi'
 import {resErr} from '@src/utils/response'
 import {ParamManagementService} from '@src/apps/estrus-service/services/param-management'
 
+const schema = Joi.object({
+  name: Joi.string().min(1).required(),
+  type: Joi.string().pattern(/^(LINGUISTIC|NUMERIC)$/).required(),
+  note: Joi.string().allow(''),
+})
+
 export class RestParamManagementController {
   private readonly paramMgmtService: ParamManagementService
 
@@ -11,12 +17,9 @@ export class RestParamManagementController {
   }
 
   create = async (req: Request, res: Response) => {
-    const schema = Joi.object({
-      name: Joi.string().min(1).required(),
-    })
     try {
       await schema.validateAsync(req.body)
-      const result = await this.paramMgmtService.create(req.body.name)
+      const result = await this.paramMgmtService.create(req.body)
       return res.status(200).send(result)
     } catch (err: any) {
       const {code, message, data} = resErr(err)
@@ -42,12 +45,9 @@ export class RestParamManagementController {
     }
   }
   update = async (req: Request, res: Response) => {
-    const schema = Joi.object({
-      name: Joi.string().min(1).required(),
-    })
     try {
       await schema.validateAsync(req.body)
-      const result = await this.paramMgmtService.update(req.params.paramId, req.body.name)
+      const result = await this.paramMgmtService.update(req.params.paramId, req.body)
       return res.status(200).send(result)
     } catch (err: any) {
       const {code, message, data} = resErr(err)

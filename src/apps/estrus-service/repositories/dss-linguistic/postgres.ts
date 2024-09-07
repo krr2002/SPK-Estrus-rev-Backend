@@ -22,13 +22,15 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
       text: `
         INSERT INTO dss_params (id, param_id, name, min_value)
         VALUES ($1::uuid, $2::uuid, $3::text, $4::double)
+        RETURNING id
       `,
       values: [uuidv7(), arg.paramId, arg.name, arg.minValue],
     }
     try {
       const client = await this.pool.connect()
-      await client.query(q)
+      const res = await client.query(q)
       client.release()
+      return res.rows[0].id
     } catch (err) {
       throw err
     }

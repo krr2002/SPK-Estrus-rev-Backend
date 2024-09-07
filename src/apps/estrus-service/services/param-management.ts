@@ -1,5 +1,6 @@
 import {DSSParamRepository} from '@src/apps/estrus-service/repositories/dss-param/interface'
 import {ERR_NO_ROW, RestResponseType} from '@src/utils/response'
+import {ParamRequestDTO, ParamResultDTO} from '@src/apps/estrus-service/controllers/param-management/dto'
 
 
 export class ParamManagementService {
@@ -9,10 +10,10 @@ export class ParamManagementService {
     this.dssParamRepo = rdp
   }
 
-  create = async (name: string): Promise<RestResponseType> => {
+  create = async (param: ParamRequestDTO): Promise<RestResponseType> => {
     try {
-      await this.dssParamRepo.create(name)
-      return {message: 'CREATED', data: {}}
+      const id = await this.dssParamRepo.create(param)
+      return {message: 'CREATED', data: {id}}
     } catch (err) {
       throw err
     }
@@ -29,14 +30,23 @@ export class ParamManagementService {
   getAll = async (): Promise<RestResponseType> => {
     try {
       const res = await this.dssParamRepo.getAll()
-      return {message: 'SUCCESS', data: res, count: res.length}
+      const result: ParamResultDTO[] = []
+      for (const item of res) {
+        result.push({
+          id: item.id,
+          name: item.name,
+          type: item.type,
+          note: item.note,
+        })
+      }
+      return {message: 'SUCCESS', data: result, count: result.length}
     } catch (err) {
       throw err
     }
   }
-  update = async (id: string, name: string): Promise<RestResponseType> => {
+  update = async (id: string, param: ParamRequestDTO): Promise<RestResponseType> => {
     try {
-      await this.dssParamRepo.update(id, name)
+      await this.dssParamRepo.update(id, param)
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
       throw err
