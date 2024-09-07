@@ -70,4 +70,32 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
       throw err
     }
   }
+  update = async (id: string, name: string) => {
+    const q = {
+      name: 'dssParamUpdate',
+      text: `UPDATE dss_params SET name = $1::string, updated_at = NOW() WHERE id = $2::uuid AND deleted_at IS NULL`,
+      values: [name, id],
+    }
+    try {
+      const client = await this.pool.connect()
+      const res = await client.query(q)
+      client.release()
+    } catch (err) {
+      throw err
+    }
+  }
+  delete = async (id: string) => {
+    const q = {
+      name: 'dssParamDelete',
+      text: `UPDATE dss_params SET deleted_at = NOW(), updated_at = NOW() WHERE id = $1::uuid AND deleted_at IS NULL`,
+      values: [id],
+    }
+    try {
+      const client = await this.pool.connect()
+      const res = await client.query(q)
+      client.release()
+    } catch (err) {
+      throw err
+    }
+  }
 }

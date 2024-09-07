@@ -25,7 +25,7 @@ export class RestParamManagementController {
   }
   getById = async (req: Request, res: Response) => {
     try {
-      const result = await this.paramMgmtService.getById(req.params.id)
+      const result = await this.paramMgmtService.getById(req.params.paramId)
       return res.status(200).send(result)
     } catch (err: any) {
       const {code, message, data} = resErr(err)
@@ -35,6 +35,28 @@ export class RestParamManagementController {
   getAll = async (req: Request, res: Response) => {
     try {
       const result = await this.paramMgmtService.getAll()
+      return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
+  update = async (req: Request, res: Response) => {
+    const schema = Joi.object({
+      name: Joi.string().min(1).required(),
+    })
+    try {
+      await schema.validateAsync(req.body)
+      const result = await this.paramMgmtService.update(req.params.paramId, req.body.name)
+      return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
+  delete = async (req: Request, res: Response) => {
+    try {
+      const result = await this.paramMgmtService.delete(req.params.paramId)
       return res.status(200).send(result)
     } catch (err: any) {
       const {code, message, data} = resErr(err)

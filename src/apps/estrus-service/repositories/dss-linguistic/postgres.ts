@@ -1,6 +1,12 @@
 import {Pool} from 'pg'
 import { v7 as uuidv7 } from 'uuid'
-import {CreateParamType, DSSAllDataType, DSSLinguisticDataType, DSSLinguisticRepository} from './interface'
+import {
+  CreateParamType,
+  DSSAllDataType,
+  DSSLinguisticDataType,
+  DSSLinguisticRepository,
+  UpdateParamType,
+} from './interface'
 
 
 export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository {
@@ -83,6 +89,44 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
         })
       }
       return result
+    } catch (err) {
+      throw err
+    }
+  }
+  update = async (langId: string, arg: UpdateParamType) => {
+    const q = {
+      name: 'dssLinguisticUpdate',
+      text: `
+        UPDATE dss_linguistics SET
+          name = $1::string,
+          min_value = $2::double,
+          updated_at = NOW()
+        WHERE id = $1::uuid AND deleted_at IS NULL
+      `,
+      values: [
+        langId,
+        arg.name,
+        arg.minValue,
+      ]
+    }
+    try {
+      const client = await this.pool.connect()
+      await client.query(q)
+      client.release()
+    } catch (err) {
+      throw err
+    }
+  }
+  delete = async (langId: string) => {
+    const q = {
+      name: 'dssLinguisticDelete',
+      text: `UPDATE dss_linguistics SET deleted_at = NOW(), updated_at = NOW() WHERE id = $1::uuid AND deleted_at IS NULL`,
+      values: [langId]
+    }
+    try {
+      const client = await this.pool.connect()
+      await client.query(q)
+      client.release()
     } catch (err) {
       throw err
     }

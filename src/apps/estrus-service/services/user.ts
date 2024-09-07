@@ -1,6 +1,5 @@
 import {UserRepository} from '@src/apps/estrus-service/repositories/user/interface'
-import {RestResponseType} from '@src/utils/response'
-import {RoleRepository} from '@src/apps/estrus-service/repositories/role/interface'
+import {ERR_NO_ROW, RestResponseType} from '@src/utils/response'
 import {UpdateDTO} from '@src/apps/estrus-service/controllers/user/dto'
 
 
@@ -11,6 +10,24 @@ export class UserService {
     this.userRepo = ru
   }
 
+  getById = async (id: string): Promise<RestResponseType> => {
+    try {
+      let res = await this.userRepo.getById(id)
+      if (!res) throw ERR_NO_ROW
+      return {message: 'FETCHED', data: {
+        nik: res.nik,
+        roleId: res.roleId,
+        fullName: res.fullName,
+        email: res.email,
+        phone: res.phone,
+        district: res.district,
+        subdistrict: res.subdistrict,
+        address: res.address,
+      }}
+    } catch (err) {
+      throw err
+    }
+  }
   getAllNonAdmin = async (): Promise<RestResponseType> => {
     try {
       let userData = await this.userRepo.getAllNonAdmin()

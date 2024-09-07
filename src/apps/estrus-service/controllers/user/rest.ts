@@ -12,6 +12,15 @@ export class RestUserController {
     this.userService = su
   }
 
+  getById = async (req: Request, res: Response) => {
+    try {
+      const result = await this.userService.getById(req.params.userId)
+      return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
   getAllNonAdmin = async (req: Request, res: Response) => {
     try {
       const result = await this.userService.getAllNonAdmin()
