@@ -35,6 +35,19 @@ export class RestLangManagementController {
       res.status(code).send({data, message})
     }
   }
+  getByIds = async (req: Request, res: Response) => {
+    const schema = Joi.object({
+      ids: Joi.array().items(Joi.string().required())
+    })
+    try {
+      await schema.validateAsync(req.body)
+      const result = await this.langMgmtService.getByIds(req.body.ids)
+      return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
   update = async (req: Request, res: Response) => {
     const schema = Joi.object({
       name: Joi.string().min(1).required(),

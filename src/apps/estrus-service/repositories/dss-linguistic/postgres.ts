@@ -20,8 +20,8 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
     const q = {
       name: 'dssLinguisticCreate',
       text: `
-        INSERT INTO dss_params (id, param_id, name, min_value)
-        VALUES ($1::uuid, $2::uuid, $3::text, $4::double)
+        INSERT INTO dss_linguistics (id, param_id, name, min_value)
+        VALUES ($1::uuid, $2::uuid, $3::text, $4::float)
         RETURNING id
       `,
       values: [uuidv7(), arg.paramId, arg.name, arg.minValue],
@@ -73,7 +73,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
           dp.name AS param_name
         FROM dss_linguistics dl
         LEFT JOIN dss_params dp ON dp.id = dl.param_id
-        WHERE param_id IN $1::uuid AND deleted_at IS NULL
+        WHERE dl.id = ANY($1::uuid[]) AND dl.deleted_at IS NULL
       `,
       values: [ids]
     }
@@ -101,7 +101,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
       text: `
         UPDATE dss_linguistics SET
           name = $1::string,
-          min_value = $2::double,
+          min_value = $2::float,
           updated_at = NOW()
         WHERE id = $1::uuid AND deleted_at IS NULL
       `,

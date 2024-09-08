@@ -63,11 +63,16 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   router.delete('/param-management/:paramId', paramMgmtCtrl.delete)
 
   router.post('/lang-management', langMgmtCtrl.create)
+  router.post('/lang-management/ids', langMgmtCtrl.getByIds)
   router.get('/lang-management/:paramId', langMgmtCtrl.getByParamId)
   router.put('/lang-management/:langId', langMgmtCtrl.update)
   router.delete('/lang-management/:langId', langMgmtCtrl.delete)
 
   router.post('/rule-management', ruleMgmtCtrl.create)
+  router.get('/rule-management', ruleMgmtCtrl.getAll)
+  router.get('/rule-management/:id', ruleMgmtCtrl.getById)
+  router.put('/rule-management/:id', ruleMgmtCtrl.update)
+  router.delete('/rule-management/:id', ruleMgmtCtrl.delete)
 
   router.post('/dss', dssCtrl.run)
 

@@ -5,3 +5,9 @@ export type UpdateDTO = {
 export type CreateDTO = UpdateDTO & {
   paramId: string
 }
+export type LangResponseDTO = {
+  id: string
+  paramId: string
+  name: string
+  minValue: number
+}
