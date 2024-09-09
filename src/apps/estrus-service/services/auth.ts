@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {Vardec} from '@src/utils/vardec'
 import {RoleRepository} from '@src/apps/estrus-service/repositories/role/interface'
+import dayjs, {Dayjs} from 'dayjs'
 
 
 export class AuthService {
@@ -72,12 +73,18 @@ export class AuthService {
       let res = await this.userRepo.getByEmail(param.credential)
       if (!res) res = await this.userRepo.getByPhone(param.credential)
       if (!res) throw ERR_NO_ROW
-      if (!bcrypt.compare(param.password, res.password)) throw ERR_ACCESS_DENIED
+      const isMatched = await bcrypt.compare(param.password, res.password)
+      if (!isMatched) throw ERR_ACCESS_DENIED
       const roleData = await this.roleRepo.getById(res.roleId)
       if (!roleData) throw ERR_ACCESS_DENIED
-      res.tokenReset = ''
-      res.password = ''
-      const token = jwt.sign({...res, roleName: roleData.name}, Vardec.getString('application.jwtSecret'))
+      const paylod = {
+        ...res,
+        tokenReset: undefined,
+        password: undefined,
+        roleName: roleData.name,
+        exp: dayjs().add(1, 'hour').unix()
+      }
+      const token = jwt.sign(paylod, Vardec.getString('application.jwtSecret'))
       return {message: 'SUCCESS', data: {token} }
     } catch (err) {
       throw err

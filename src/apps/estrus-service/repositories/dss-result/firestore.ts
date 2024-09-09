@@ -2,7 +2,7 @@ import {CreateParamType, DSSResultDataType, DSSResultRepository} from './interfa
 import {CollectionReference, Firestore} from '@google-cloud/firestore'
 import {stripDash} from '@src/utils/uuid'
 import dayjs from 'dayjs'
-import {v7 as uuidv7} from 'uuid'
+import {v7 as uuid} from 'uuid'
 
 
 export class FirestoreDSSResultRepository implements DSSResultRepository {
@@ -13,7 +13,6 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
   }
 
   create = async (arg: CreateParamType) => {
-    const id = stripDash(uuidv7())
     const datum = {
       ...arg,
       createdAt: dayjs().toISOString(),
@@ -21,8 +20,16 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
       deletedAt: null,
     }
     try {
-      await this.noSql.doc(id).set(datum)
-      return {...datum, id}
+      await this.noSql.doc(stripDash(uuid())).set({
+        name: arg.name,
+        age: arg.age,
+        condition: arg.condition,
+        dssResult: arg.dssResult,
+        createdBy: stripDash(arg.createdBy),
+        createdAt: dayjs().toISOString(),
+        updatedAt: dayjs().toISOString(),
+        deletedAt: null,
+      })
     } catch (err) {
       throw err
     }
@@ -36,8 +43,36 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
         res.push({
           id: item.id,
           name: datum.name,
-          ruleSets: datum.ruleSets,
-          result: datum.result,
+          age: datum.age,
+          condition: datum.condition,
+          dssResult: datum.dssResult,
+          createdBy: datum.createdBy,
+          createdAt: datum.createdAt,
+          updatedAt: datum.updatedAt,
+          deletedAt: datum.deletedAt,
+        })
+      })
+      return res
+    } catch (err) {
+      throw err
+    }
+  }
+  getByCreator = async (creatorId: string) => {
+    try {
+      let res: DSSResultDataType[] = []
+      const repoData = await this.noSql
+        .where('createdBy', '==', stripDash(creatorId))
+        .where('deletedAt', '==', null)
+        .get()
+      repoData.forEach((item) => {
+        const datum = item.data()
+        res.push({
+          id: item.id,
+          name: datum.name,
+          age: datum.age,
+          condition: datum.condition,
+          dssResult: datum.dssResult,
+          createdBy: datum.createdBy,
           createdAt: datum.createdAt,
           updatedAt: datum.updatedAt,
           deletedAt: datum.deletedAt,
@@ -50,22 +85,27 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
   }
   getById = async (id: string) => {
     try {
-      const repoData = await this.noSql
-        .doc(stripDash(id))
-        .get()
+      const repoData = await this.noSql.doc(stripDash(id)).get()
       const datum = repoData.data()
-      if (datum && !datum.deletedAt) {
-        return {
-          id: repoData.id,
-          name: datum.name,
-          ruleSets: datum.ruleSets,
-          result: datum.result,
-          createdAt: datum.createdAt,
-          updatedAt: datum.updatedAt,
-          deletedAt: datum.deletedAt,
-        }
+      if (!datum) return null
+      return {
+        id: repoData.id,
+        name: datum.name,
+        age: datum.age,
+        condition: datum.condition,
+        dssResult: datum.dssResult,
+        createdBy: datum.createdBy,
+        createdAt: datum.createdAt,
+        updatedAt: datum.updatedAt,
+        deletedAt: datum.deletedAt,
       }
-      return null
+    } catch (err) {
+      throw err
+    }
+  }
+  delete = async (id: string) => {
+    try {
+      await this.noSql.doc(stripDash(id)).delete()
     } catch (err) {
       throw err
     }

@@ -1,8 +1,9 @@
 import {CreateParamType, RuleBaseDataType, RuleBaseRepository} from './interface'
 import {CollectionReference, Firestore} from '@google-cloud/firestore'
-import {stripDashAll} from '@src/utils/uuid'
+import {stripDash, stripDashAll} from '@src/utils/uuid'
 import dayjs from 'dayjs'
-import {ERR_DUPLICATE} from '@src/utils/response'
+import {ERR_DUPLICATE, ERR_NO_ROW} from '@src/utils/response'
+import {v7 as uuid} from 'uuid'
 
 
 export class FirestoreRuleBaseRepository implements RuleBaseRepository {
@@ -23,7 +24,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
     try {
       const ruleData = await this.getByAndLinguisticCombo(arg.linguisticCombo)
       if (ruleData) throw ERR_DUPLICATE
-      await this.noSql.add(datum)
+      await this.noSql.doc(stripDash(uuid())).set(datum)
     } catch (err) {
       throw err
     }
@@ -73,14 +74,57 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
       console.log(ruleData)
       for (let i = 1; i < combo.length; i++) {
         ruleData = ruleData.filter((item) => item.linguisticCombo.includes(combo[i]))
-        console.log('recursive ', i)
-        console.log(ruleData)
         if (ruleData.length === 0) return null
       }
       for (const datum of ruleData) {
         if (datum.linguisticCombo.length === combo.length) return datum
       }
       return null
+    } catch (err) {
+      throw err
+    }
+  }
+  getById = async (id: string) => {
+    try {
+      const repoData = await this.noSql.doc(id).get()
+      const datum = repoData.data()
+      if (!datum) return null
+      return {
+        id: repoData.id,
+        name: datum.name,
+        linguisticCombo: datum.linguisticCombo,
+        operator: datum.operator,
+        result: datum.result,
+        createdAt: datum.createdAt,
+        updatedAt: datum.updatedAt,
+        deletedAt: datum.deletedAt,
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+  update = async (id: string, arg: CreateParamType) => {
+    try {
+      const repoData = await this.noSql.doc(id).get()
+      const datum = repoData.data()
+      if (!datum) throw ERR_NO_ROW
+      await this.noSql.doc(id).set({
+        id: id,
+        name: arg.name,
+        linguisticCombo: arg.linguisticCombo,
+        operator: arg.operator,
+        result: arg.result,
+        createdAt: datum.createdAt,
+        updatedAt: dayjs().toISOString(),
+        deletedAt: datum.deletedAt,
+      })
+    } catch (err) {
+      throw err
+    }
+  }
+  delete = async (id: string) => {
+    try {
+      await this.noSql.doc(id).delete()
     } catch (err) {
       throw err
     }

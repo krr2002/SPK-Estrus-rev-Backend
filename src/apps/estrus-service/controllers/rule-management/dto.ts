@@ -4,3 +4,7 @@ export type CreateRuleDTO = {
   operator: 'AND'|'OR'
   result: string
 }
+
+export type ResponseDTO = CreateRuleDTO & {
+  id: string
+}

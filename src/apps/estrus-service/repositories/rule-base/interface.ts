@@ -16,4 +16,7 @@ export interface RuleBaseRepository {
   create(arg: CreateParamType): Promise<void>
   getAll(): Promise<RuleBaseDataType[]>
   getByAndLinguisticCombo(combo: string[]): Promise<RuleBaseDataType|null>
+  getById(id: string): Promise<RuleBaseDataType|null>
+  update(id: string, arg: CreateParamType): Promise<void>
+  delete(id: string): Promise<void>
 }

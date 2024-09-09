@@ -1,10 +1,9 @@
 export type CreateParamType = {
   name: string
-  ruleSets: {
-    key: string
-    value: string
-  }[]
-  result: string
+  age: number
+  condition: object
+  dssResult: string
+  createdBy: string
 }
 
 export type DSSResultDataType = CreateParamType & {
@@ -15,7 +14,9 @@ export type DSSResultDataType = CreateParamType & {
 }
 
 export interface DSSResultRepository {
-  create(arg: CreateParamType): Promise<DSSResultDataType>
+  create(arg: CreateParamType): Promise<void>
   getAll(): Promise<DSSResultDataType[]>
+  getByCreator(creatorId: string): Promise<DSSResultDataType[]>
   getById(id: string): Promise<DSSResultDataType|null>
+  delete(id: string): Promise<void>
 }

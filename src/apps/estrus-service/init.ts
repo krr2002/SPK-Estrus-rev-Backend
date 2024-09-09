@@ -19,6 +19,8 @@ import {FirestoreDSSResultRepository} from '@src/apps/estrus-service/repositorie
 import {PostgresRoleRepository} from '@src/apps/estrus-service/repositories/role/postgres'
 import {UserService} from '@src/apps/estrus-service/services/user'
 import {RestUserController} from '@src/apps/estrus-service/controllers/user/rest'
+import {ResultHistoryService} from '@src/apps/estrus-service/services/result-history'
+import {RestResultHistoryController} from '@src/apps/estrus-service/controllers/result-history/rest'
 
 
 export const initEstrus = (sql: Pool, noSql: Firestore) => {
@@ -37,6 +39,7 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   const langMgmtServ = new LinguisticManagementService(dssLangRepo)
   const ruleMgmtServ = new RuleManagementService(dssRuleRepo)
   const dssServ = new DSSService(dssRuleRepo, dssLangRepo, dssResRepo)
+  const resHistoryServ = new ResultHistoryService(dssResRepo)
 
   const authCtrl = new RestAuthController(authServ)
   const userCtrl = new RestUserController(userServ)
@@ -44,24 +47,44 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   const langMgmtCtrl = new RestLangManagementController(langMgmtServ)
   const ruleMgmtCtrl = new RestRuleManagementController(ruleMgmtServ)
   const dssCtrl = new RestDSSController(dssServ)
+  const resHistoryCtrl = new RestResultHistoryController(resHistoryServ)
 
   router.post('/auth/register/user', authCtrl.registerUser)
   router.post('/auth/register/admin', authCtrl.registerAdmin)
   router.post('/auth/register/expert', authCtrl.registerExpert)
   router.post('/auth/login', authCtrl.login)
+  router.delete('/auth/logout', authCtrl.logout)
 
   router.get('/user', userCtrl.getAllNonAdmin)
+  router.get('/user/:userId', userCtrl.getById)
+  router.put('/user/:userId', userCtrl.update)
+  router.delete('/user/:userId', userCtrl.delete)
 
   router.post('/param-management', paramMgmtCtrl.create)
-  router.get('/param-management/:id', paramMgmtCtrl.getById)
+  router.get('/param-management/:paramId', paramMgmtCtrl.getById)
   router.get('/param-management', paramMgmtCtrl.getAll)
+  router.put('/param-management/:paramId', paramMgmtCtrl.update)
+  router.delete('/param-management/:paramId', paramMgmtCtrl.delete)
 
   router.post('/lang-management', langMgmtCtrl.create)
+  router.post('/lang-management/ids', langMgmtCtrl.getByIds)
   router.get('/lang-management/:paramId', langMgmtCtrl.getByParamId)
+  router.put('/lang-management/:langId', langMgmtCtrl.update)
+  router.delete('/lang-management/:langId', langMgmtCtrl.delete)
 
   router.post('/rule-management', ruleMgmtCtrl.create)
+  router.get('/rule-management', ruleMgmtCtrl.getAll)
+  router.get('/rule-management/:id', ruleMgmtCtrl.getById)
+  router.put('/rule-management/:id', ruleMgmtCtrl.update)
+  router.delete('/rule-management/:id', ruleMgmtCtrl.delete)
 
-  router.post('/dss', dssCtrl.run)
+  router.get('/result-history', resHistoryCtrl.getAll)
+  router.get('/result-history/creator', resHistoryCtrl.getByCreator)
+  router.get('/result-history/:id', resHistoryCtrl.getById)
+  router.delete('/result-history/:id', resHistoryCtrl.delete)
+
+  router.get('/dss/params', dssCtrl.getAllParam)
+  router.post('/dss/run', dssCtrl.run)
 
   return router
 }
