@@ -74,8 +74,6 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
       console.log(ruleData)
       for (let i = 1; i < combo.length; i++) {
         ruleData = ruleData.filter((item) => item.linguisticCombo.includes(combo[i]))
-        console.log('recursive ', i)
-        console.log(ruleData)
         if (ruleData.length === 0) return null
       }
       for (const datum of ruleData) {
