@@ -9,5 +9,5 @@ export type LangResponseDTO = {
   id: string
   paramId: string
   name: string
-  minValue: number
+  min: number
 }

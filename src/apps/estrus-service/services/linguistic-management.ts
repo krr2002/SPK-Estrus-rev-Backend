@@ -27,7 +27,7 @@ export class LinguisticManagementService {
           id: lang.id,
           paramId: lang.paramId,
           name: lang.name,
-          minValue: lang.minValue,
+          min: lang.minValue,
         })
       }
       return {message: 'SUCCESS', data: res || {}}

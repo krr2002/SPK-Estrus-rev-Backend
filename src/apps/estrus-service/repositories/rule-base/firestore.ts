@@ -1,8 +1,9 @@
 import {CreateParamType, RuleBaseDataType, RuleBaseRepository} from './interface'
 import {CollectionReference, Firestore} from '@google-cloud/firestore'
-import {stripDashAll} from '@src/utils/uuid'
+import {stripDash, stripDashAll} from '@src/utils/uuid'
 import dayjs from 'dayjs'
 import {ERR_DUPLICATE, ERR_NO_ROW} from '@src/utils/response'
+import {v7 as uuid} from 'uuid'
 
 
 export class FirestoreRuleBaseRepository implements RuleBaseRepository {
@@ -23,7 +24,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
     try {
       const ruleData = await this.getByAndLinguisticCombo(arg.linguisticCombo)
       if (ruleData) throw ERR_DUPLICATE
-      await this.noSql.add(datum)
+      await this.noSql.doc(stripDash(uuid())).set(datum)
     } catch (err) {
       throw err
     }
@@ -125,19 +126,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
   }
   delete = async (id: string) => {
     try {
-      const repoData = await this.noSql.doc(id).get()
-      const datum = repoData.data()
-      if (!datum) return
-      await this.noSql.doc(id).set({
-        id: id,
-        name: datum.name,
-        linguisticCombo: datum.linguisticCombo,
-        operator: datum.operator,
-        result: datum.result,
-        createdAt: datum.createdAt,
-        updatedAt: dayjs().toISOString(),
-        deletedAt: dayjs().toISOString(),
-      })
+      await this.noSql.doc(id).delete()
     } catch (err) {
       throw err
     }

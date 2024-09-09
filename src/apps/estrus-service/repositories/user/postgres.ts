@@ -326,14 +326,14 @@ export class PostgresUserRepository implements UserRepository {
       text: `
         UPDATE users
         SET ( 
-          nik $1::string,
-          full_name $2::string,
-          country $3::string,
-          province $4::string,
-          city $5::string,
-          district $6::string,
-          subdistrict $7::string,
-          address $8::string,
+          nik $1::text,
+          full_name $2::text,
+          country $3::text,
+          province $4::text,
+          city $5::text,
+          district $6::text,
+          subdistrict $7::text,
+          address $8::text,
           updated_at = NOW()
         )
         WHERE id = $9::uuid AND deleted_at IS NULL

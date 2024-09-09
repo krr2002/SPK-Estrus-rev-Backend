@@ -1,6 +1,6 @@
 import {RuleBaseRepository} from '@src/apps/estrus-service/repositories/rule-base/interface'
 import {RestResponseType} from '@src/utils/response'
-import {DSSDTO} from '@src/apps/estrus-service/controllers/dss/dto'
+import {DSSDTO, DSSParamWithOptionsDTO} from '@src/apps/estrus-service/controllers/dss/dto'
 import {DSSLinguisticRepository} from '@src/apps/estrus-service/repositories/dss-linguistic/interface'
 import {DSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/interface'
 
@@ -16,11 +16,36 @@ export class DSSService {
     this.dssResRepo = rdr
   }
 
-  run = async (param: DSSDTO): Promise<RestResponseType> => {
+  getAllParam = async (): Promise<RestResponseType> => {
     try {
-      const dssCombineData = await this.dssLangRepo.getByIds(param.linguisticCombo)
+      const dssRepo = await this.dssLangRepo.getAllWithParam()
+      const groupedData = Object.values(dssRepo.reduce((acc: any, curr) => {
+        if (!acc[curr.paramId]) {
+          acc[curr.paramId] = {
+            id: curr.paramId,
+            name: curr.paramName,
+            type: curr.type,
+            options: []
+          }
+        }
+        acc[curr.paramId].options.push({
+          id: curr.id,
+          name: curr.name,
+          min: curr.minValue
+        })
+        return acc
+      }, {}))
+      return {message: 'SUCCESS', data: groupedData}
+    } catch (err) {
+      throw err
+    }
+  }
+  // TODO: can only handle AND operator
+  run = async (param: DSSDTO & { creatorId: string }): Promise<RestResponseType> => {
+    try {
+      const dssCombineData = await this.dssLangRepo.getByIds(param.conditions)
       if (dssCombineData.length === 0) return {message: 'FAIL', data: ['no ruleset available']}
-      const ruleData = await this.dssRuleRepo.getByAndLinguisticCombo(param.linguisticCombo)
+      const ruleData = await this.dssRuleRepo.getByAndLinguisticCombo(param.conditions)
       if (!ruleData) return {message: 'FAIL', data: ['no ruleset available']}
       const ruleSets = []
       for (const ruleSet of dssCombineData) {
@@ -29,12 +54,16 @@ export class DSSService {
           value: ruleSet.langName,
         })
       }
-      const res = await this.dssResRepo.create({
-        ruleSets,
+
+      // Concurrently saving the result history and returning the result to client
+      this.dssResRepo.create({
         name: param.specimenName,
-        result: ruleData.result,
+        age: param.age,
+        condition: ruleSets,
+        dssResult: ruleData.result,
+        createdBy: param.creatorId,
       })
-      return {message: 'SUCCESS', data: res}
+      return {message: 'SUCCESS', data: [ruleData.result]}
     } catch (err) {
       throw err
     }

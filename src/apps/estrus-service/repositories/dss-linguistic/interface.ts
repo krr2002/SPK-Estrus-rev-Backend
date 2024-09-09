@@ -7,6 +7,10 @@ export type DSSLinguisticDataType = {
   updatedAt: string
   deletedAt: string|null
 }
+export type DSSLangWithParamDataType = DSSLinguisticDataType & {
+  paramName: string
+  type: 'LINGUISTIC'|'NUMERIC'
+}
 export type DSSAllDataType = {
   langId: string
   langName: string
@@ -25,6 +29,7 @@ export interface DSSLinguisticRepository {
   create(arg: CreateParamType): Promise<string>
   getAllByParamId(paramId: string): Promise<DSSLinguisticDataType[]>
   getByIds(ids: string[]): Promise<DSSAllDataType[]>
+  getAllWithParam(): Promise<DSSLangWithParamDataType[]>
   update(id: string, arg: UpdateParamType): Promise<void>
   delete(id: string): Promise<void>
 }

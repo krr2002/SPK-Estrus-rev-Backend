@@ -2,7 +2,7 @@ import {Pool} from 'pg'
 import { v7 as uuidv7 } from 'uuid'
 import {
   CreateParamType,
-  DSSAllDataType,
+  DSSAllDataType, DSSLangWithParamDataType,
   DSSLinguisticDataType,
   DSSLinguisticRepository,
   UpdateParamType,
@@ -95,13 +95,55 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
       throw err
     }
   }
+  getAllWithParam = async () => {
+    const q = {
+      name: 'dssLinguisticGetAllWithParam',
+      text: `
+        SELECT
+          dl.id,
+          dl.name,
+          dl.param_id,
+          dp.name AS param_name,
+          dp.type,
+          dl.min_value,
+          dl.created_at,
+          dl.updated_at,
+          dl.deleted_at
+        FROM dss_linguistics dl
+        LEFT JOIN dss_params dp ON dp.id = dl.param_id
+        WHERE dl.deleted_at IS NULL AND dp.deleted_at IS NULL
+      `,
+    }
+    try {
+      const client = await this.pool.connect()
+      const res = await client.query(q)
+      client.release()
+      const result: DSSLangWithParamDataType[] = []
+      for (const item of res.rows) {
+        result.push({
+          id: item.id,
+          name: item.name,
+          paramId: item.param_id,
+          paramName: item.param_name,
+          type: item.type,
+          minValue: item.min_value,
+          createdAt: item.created_at,
+          updatedAt: item.updated_at,
+          deletedAt: item.deleted_at,
+        })
+      }
+      return result
+    } catch (err) {
+      throw err
+    }
+  }
   update = async (langId: string, arg: UpdateParamType) => {
     const q = {
       name: 'dssLinguisticUpdate',
       text: `
         UPDATE dss_linguistics SET
-          name = $1::string,
-          min_value = $2::float,
+          name = $2::text,
+          min_value = $3::float,
           updated_at = NOW()
         WHERE id = $1::uuid AND deleted_at IS NULL
       `,

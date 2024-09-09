@@ -84,9 +84,9 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
       name: 'dssParamUpdate',
       text: `
         UPDATE dss_params SET
-          name = $2::string,
-          type = $3::string,
-          note = $4::string,
+          name = $2::text,
+          type = $3::text,
+          note = $4::text,
           updated_at = NOW()
         WHERE id = $1::uuid AND deleted_at IS NULL
       `,

@@ -11,11 +11,21 @@ export class RestDSSController {
     this.dssService = sd
   }
 
+  getAllParam = async (req: Request, res: Response) => {
+    try {
+      const result = await this.dssService.getAllParam()
+      return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
   run = async (req: Request, res: Response) => {
     const schema = Joi.object({
       specimenName: Joi.string().min(1).required(),
-      linguisticCombo: Joi.array().items(Joi.string().required(), Joi.string().required()),
-    })
+      age: Joi.number().required(),
+      conditions: Joi.array().items(Joi.string().required(), Joi.string().required()),
+    }).unknown()
     try {
       await schema.validateAsync(req.body)
       const result = await this.dssService.run(req.body)

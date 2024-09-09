@@ -52,7 +52,7 @@ export class RestLangManagementController {
     const schema = Joi.object({
       name: Joi.string().min(1).required(),
       min: Joi.number().required(),
-    })
+    }).unknown()
     try {
       await schema.validateAsync(req.body)
       const result = await this.langMgmtService.update(req.params.langId, req.body)
