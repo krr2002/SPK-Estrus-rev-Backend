@@ -1,11 +1,13 @@
 export const stripDash = (uuid: string) => {
-  return uuid.replaceAll('-', '').toLowerCase()
+  if (uuid.length === 36 && uuid.includes('-')) return uuid.replaceAll('-', '').toLowerCase()
+  return uuid
 }
 
 export const stripDashAll = (uuids: string[]) => {
   const newUuids = []
-  for (const uuid of uuids) {
-    newUuids.push(uuid.replaceAll('-', '').toLowerCase())
+  for (let uuid of uuids) {
+    if (uuid.length === 36 && uuid.includes('-')) uuid.replaceAll('-', '').toLowerCase()
+    newUuids.push(uuid)
   }
   return newUuids
 }

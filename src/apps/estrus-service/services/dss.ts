@@ -3,6 +3,7 @@ import {RestResponseType} from '@src/utils/response'
 import {DSSDTO, DSSParamWithOptionsDTO} from '@src/apps/estrus-service/controllers/dss/dto'
 import {DSSLinguisticRepository} from '@src/apps/estrus-service/repositories/dss-linguistic/interface'
 import {DSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/interface'
+import {stripDashAll} from '@src/utils/uuid'
 
 
 export class DSSService {
@@ -43,9 +44,9 @@ export class DSSService {
   // TODO: can only handle AND operator
   run = async (param: DSSDTO & { creatorId: string }): Promise<RestResponseType> => {
     try {
-      const dssCombineData = await this.dssLangRepo.getByIds(param.conditions)
+      const dssCombineData = await this.dssLangRepo.getByIds(stripDashAll(param.conditions))
       if (dssCombineData.length === 0) return {message: 'FAIL', data: ['no ruleset available']}
-      const ruleData = await this.dssRuleRepo.getByAndLinguisticCombo(param.conditions)
+      const ruleData = await this.dssRuleRepo.getByAndLinguisticCombo(stripDashAll(param.conditions))
       if (!ruleData) return {message: 'FAIL', data: ['no ruleset available']}
       const ruleSets = []
       for (const ruleSet of dssCombineData) {
