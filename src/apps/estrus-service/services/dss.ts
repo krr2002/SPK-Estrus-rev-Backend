@@ -55,9 +55,7 @@ export class DSSService {
           value: ruleSet.langName,
         })
       }
-
-      // Concurrently saving the result history and returning the result to client
-      this.dssResRepo.create({
+      await this.dssResRepo.create({
         name: param.specimenName,
         age: param.age,
         condition: ruleSets,
