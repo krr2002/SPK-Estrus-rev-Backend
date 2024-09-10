@@ -3,7 +3,7 @@ import {RestResponseType} from '@src/utils/response'
 import {DSSDTO, DSSParamWithOptionsDTO} from '@src/apps/estrus-service/controllers/dss/dto'
 import {DSSLinguisticRepository} from '@src/apps/estrus-service/repositories/dss-linguistic/interface'
 import {DSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/interface'
-import {stripDashAll} from '@src/utils/uuid'
+import {stripDash, stripDashAll} from '@src/utils/uuid'
 
 
 export class DSSService {
@@ -55,12 +55,14 @@ export class DSSService {
           value: ruleSet.langName,
         })
       }
+
+      // Concurrently saving the result history and returning the result to client
       await this.dssResRepo.create({
         name: param.specimenName,
         age: param.age,
         condition: ruleSets,
         dssResult: ruleData.result,
-        createdBy: param.creatorId,
+        createdBy: stripDash(param.creatorId),
       })
       return {message: 'SUCCESS', data: [ruleData.result]}
     } catch (err) {

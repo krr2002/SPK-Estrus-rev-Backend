@@ -13,12 +13,6 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
   }
 
   create = async (arg: CreateParamType) => {
-    const datum = {
-      ...arg,
-      createdAt: dayjs().toISOString(),
-      updatedAt: dayjs().toISOString(),
-      deletedAt: null,
-    }
     try {
       await this.noSql.doc(stripDash(uuid())).set({
         name: arg.name,
