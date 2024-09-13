@@ -12,7 +12,7 @@ export class LinguisticManagementService {
 
   create = async (param: CreateDTO): Promise<RestResponseType> => {
     try {
-      await this.dssLangRepo.create({paramId: param.paramId, name: param.name, minValue: param.min})
+      await this.dssLangRepo.create({paramId: param.paramId, name: param.name, minValue: param.min, maxValue: param.max})
       return {message: 'CREATED', data: {}}
     } catch (err) {
       throw err
@@ -45,7 +45,7 @@ export class LinguisticManagementService {
   }
   update = async (langId: string, param: UpdateDTO): Promise<RestResponseType> => {
     try {
-      await this.dssLangRepo.update(langId, {name: param.name, minValue: param.min})
+      await this.dssLangRepo.update(langId, {name: param.name, minValue: param.min, maxValue: param.max})
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
       throw err

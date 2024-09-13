@@ -1,6 +1,7 @@
 export type UpdateDTO = {
   name: string
   min: number
+  max: number
 }
 export type CreateDTO = UpdateDTO & {
   paramId: string

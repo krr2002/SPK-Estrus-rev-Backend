@@ -3,6 +3,7 @@ export type DSSLinguisticDataType = {
   paramId: string
   name: string
   minValue: number
+  maxValue: number
   createdAt: string
   updatedAt: string
   deletedAt: string|null
@@ -20,6 +21,7 @@ export type DSSAllDataType = {
 export type UpdateParamType = {
   name: string
   minValue: number
+  maxValue: number
 }
 export type CreateParamType = UpdateParamType & {
   paramId: string

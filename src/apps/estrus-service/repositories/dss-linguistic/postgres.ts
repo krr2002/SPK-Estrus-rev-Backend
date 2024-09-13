@@ -20,11 +20,11 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
     const q = {
       name: 'dssLinguisticCreate',
       text: `
-        INSERT INTO dss_linguistics (id, param_id, name, min_value)
-        VALUES ($1::uuid, $2::uuid, $3::text, $4::float)
+        INSERT INTO dss_linguistics (id, param_id, name, min_value, max_value)
+        VALUES ($1::uuid, $2::uuid, $3::text, $4::float, $5::float)
         RETURNING id
       `,
-      values: [uuidv7(), arg.paramId, arg.name, arg.minValue],
+      values: [uuidv7(), arg.paramId, arg.name, arg.minValue, arg.maxValue],
     }
     try {
       const client = await this.pool.connect()
@@ -52,6 +52,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
           paramId: item.param_id,
           name: item.name,
           minValue: item.min_value,
+          maxValue: item.max_value,
           createdAt: item.created_at,
           updatedAt: item.updated_at,
           deletedAt: item.deleted_at,
@@ -127,6 +128,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
           paramName: item.param_name,
           type: item.type,
           minValue: item.min_value,
+          maxValue: item.max_value,
           createdAt: item.created_at,
           updatedAt: item.updated_at,
           deletedAt: item.deleted_at,
@@ -144,6 +146,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
         UPDATE dss_linguistics SET
           name = $2::text,
           min_value = $3::float,
+          max_value = $4::float,
           updated_at = NOW()
         WHERE id = $1::uuid AND deleted_at IS NULL
       `,
@@ -151,6 +154,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
         langId,
         arg.name,
         arg.minValue,
+        arg.maxValue,
       ]
     }
     try {
