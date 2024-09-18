@@ -90,4 +90,7 @@ export class AuthService {
       throw err
     }
   }
+  requestRecovery = async () => {
+
+  }
 }
