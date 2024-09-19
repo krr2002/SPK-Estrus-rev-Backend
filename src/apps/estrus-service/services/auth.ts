@@ -35,7 +35,7 @@ export class AuthService {
       })
       return {message: 'CREATED', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -53,7 +53,7 @@ export class AuthService {
       })
       return {message: 'CREATED', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -71,7 +71,7 @@ export class AuthService {
       })
       return {message: 'CREATED', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -94,7 +94,7 @@ export class AuthService {
       const token = jwt.sign(paylod, Vardec.getString('application.jwtSecret'))
       return {message: 'SUCCESS', data: {token} }
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -122,7 +122,7 @@ export class AuthService {
       Logger.error(httpRes.data)
       throw Error('Failed to send email')
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -132,7 +132,7 @@ export class AuthService {
       await this.userRepo.resetPassword({tokenReset: param.code, password: param.password})
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }

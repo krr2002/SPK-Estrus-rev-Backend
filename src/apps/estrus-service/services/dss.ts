@@ -39,7 +39,7 @@ export class DSSService {
       }, {}))
       return {message: 'SUCCESS', data: groupedData}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -68,7 +68,7 @@ export class DSSService {
       })
       return {message: 'SUCCESS', data: [ruleData.result]}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }

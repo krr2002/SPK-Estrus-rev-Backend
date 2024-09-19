@@ -33,7 +33,7 @@ export class Vardec {
           res = res[keys[i]]
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       Logger.error(err.message)
       res = ''
     }
@@ -54,7 +54,7 @@ export class Vardec {
           res = res[keys[i]]
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       Logger.error(err.message)
       res = 0
     }
@@ -75,7 +75,7 @@ export class Vardec {
           res = res[keys[i]]
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       Logger.error(err.message)
       res = false
     }

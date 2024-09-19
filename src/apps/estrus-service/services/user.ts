@@ -26,7 +26,7 @@ export class UserService {
         address: res.address,
       }}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -35,7 +35,7 @@ export class UserService {
       let userData = await this.userRepo.getAllNonAdmin()
       return {message: 'CREATED', data: userData}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -49,7 +49,7 @@ export class UserService {
       })
       return {message: 'UPDATED', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -58,7 +58,7 @@ export class UserService {
       await this.userRepo.delete(id)
       return {message: 'DELETED', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }

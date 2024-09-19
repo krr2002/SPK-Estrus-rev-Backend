@@ -16,7 +16,7 @@ export class ParamManagementService {
       const id = await this.dssParamRepo.create(param)
       return {message: 'CREATED', data: {id}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -26,7 +26,7 @@ export class ParamManagementService {
       if (!res) throw ERR_NO_ROW
       return {message: 'SUCCESS', data: res}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -44,7 +44,7 @@ export class ParamManagementService {
       }
       return {message: 'SUCCESS', data: result, count: result.length}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -53,7 +53,7 @@ export class ParamManagementService {
       await this.dssParamRepo.update(id, param)
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
@@ -62,7 +62,7 @@ export class ParamManagementService {
       await this.dssParamRepo.delete(id)
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
-      if (!isGenericError()) Logger.warn(err)
+      if (!isGenericError(err)) Logger.warn(err)
       throw err
     }
   }
