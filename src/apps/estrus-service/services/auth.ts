@@ -129,7 +129,8 @@ export class AuthService {
   resetPassword = async (param: ResetPassDTO) => {
     try {
       param.password = await bcrypt.hash(param.password, 10)
-      await this.userRepo.resetPassword({tokenReset: param.code, password: param.password})
+      const res = await this.userRepo.resetPassword({tokenReset: param.code, password: param.password})
+      if (!res) throw ERR_NO_ROW
       return {message: 'SUCCESS', data: {}}
     } catch (err: any) {
       if (!isGenericError(err)) Logger.warn(err.message)

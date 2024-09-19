@@ -36,7 +36,7 @@ export interface UserRepository {
   createUser(arg: CreateParamType): Promise<void>
   createAdmin(arg: CreateParamType): Promise<void>
   createExpert(arg: CreateParamType): Promise<void>
-  resetPassword(arg: ResetPasswordParamType): Promise<void>
+  resetPassword(arg: ResetPasswordParamType): Promise<boolean>
   getById(id: string): Promise<UserDataType|null>
   getByEmail(username: string): Promise<UserDataType|null>
   getByPhone(username: string): Promise<UserDataType|null>

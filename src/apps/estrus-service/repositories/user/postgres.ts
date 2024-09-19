@@ -7,6 +7,7 @@ import {
 } from './interface'
 import {Pool} from 'pg'
 import { v7 as uuidv7 } from 'uuid'
+import {Logger} from '@src/utils/logger'
 
 
 export class PostgresUserRepository implements UserRepository {
@@ -191,21 +192,31 @@ export class PostgresUserRepository implements UserRepository {
     }
   }
   resetPassword = async (arg: ResetPasswordParamType) => {
-    const q = {
-      name: 'userResetPassword',
+    const qs = {
+      name: 'userSelectResetPassword',
+      text: `SELECT COUNT(*) AS count FROM users WHERE token_reset = $1::text AND deleted_at IS NULL`,
+      values: [arg.tokenReset]
+    }
+    const qu = {
+      name: 'userUpdateResetPassword',
       text: `
-        UPDATE users SET 
-          password = $2::text, 
-          token_reset = $3::text, 
-          updated_at = NOW()
-        WHERE token_reset = $1::text AND deleted_at IS NULL
+          UPDATE users SET
+            password = $2::text, 
+            token_reset = $3::text,
+            updated_at = NOW()
+          WHERE token_reset = $1::text AND deleted_at IS NULL
       `,
       values: [arg.tokenReset, arg.password, uuidv7()]
     }
     try {
-      const client = await this.pool.connect()
-      await client.query(q)
+      let client = await this.pool.connect()
+      const res = await client.query(qs)
       client.release()
+      if (parseInt(res.rows[0].count) === 0) return false
+      client = await this.pool.connect()
+      await client.query(qu)
+      client.release()
+      return true
     } catch (err: any) {
       throw err
     }
