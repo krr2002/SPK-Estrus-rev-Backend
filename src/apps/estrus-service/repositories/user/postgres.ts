@@ -1,4 +1,10 @@
-import {CreateParamType, UserDataType, UserGetAllNonAdminType, UserRepository} from './interface'
+import {
+  CreateParamType,
+  ResetPasswordParamType,
+  UserDataType,
+  UserGetAllNonAdminType,
+  UserRepository,
+} from './interface'
 import {Pool} from 'pg'
 import { v7 as uuidv7 } from 'uuid'
 
@@ -175,6 +181,26 @@ export class PostgresUserRepository implements UserRepository {
         arg.address.toUpperCase(),
         arg.password,
       ]
+    }
+    try {
+      const client = await this.pool.connect()
+      await client.query(q)
+      client.release()
+    } catch (err) {
+      throw err
+    }
+  }
+  resetPassword = async (arg: ResetPasswordParamType) => {
+    const q = {
+      name: 'userResetPassword',
+      text: `
+        UPDATE users SET 
+          password = $2::text, 
+          token_reset = $3::text, 
+          updated_at = NOW()
+        WHERE token_reset = $1::text AND deleted_at IS NULL
+      `,
+      values: [arg.tokenReset, arg.password, uuidv7()]
     }
     try {
       const client = await this.pool.connect()

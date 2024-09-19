@@ -4,6 +4,8 @@ import express from 'express'
 import cors from 'cors'
 import {initEstrus} from '@src/apps/estrus-service/init'
 import {firestore} from '@src/utils/firestore'
+import * as handlebars from 'handlebars'
+import fs from 'node:fs'
 
 const main = async () => {
   Vardec.init("./config/config.local.json")

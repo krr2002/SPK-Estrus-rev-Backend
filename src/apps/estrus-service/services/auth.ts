@@ -1,11 +1,14 @@
 import {UserRepository} from '@src/apps/estrus-service/repositories/user/interface'
-import {LoginDTO, RegisterDTO} from '@src/apps/estrus-service/controllers/auth/dto'
+import {LoginDTO, RegisterDTO, ResetPassDTO} from '@src/apps/estrus-service/controllers/auth/dto'
 import {ERR_ACCESS_DENIED, ERR_DUPLICATE, ERR_NO_ROW, RestResponseType} from '@src/utils/response'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {Vardec} from '@src/utils/vardec'
 import {RoleRepository} from '@src/apps/estrus-service/repositories/role/interface'
 import dayjs, {Dayjs} from 'dayjs'
+import axios from 'axios'
+import fs from 'node:fs'
+import * as handlebars from 'handlebars'
 
 
 export class AuthService {
@@ -90,7 +93,38 @@ export class AuthService {
       throw err
     }
   }
-  requestRecovery = async () => {
-
+  requestRecovery = async (email: string) => {
+    try {
+      const userData = await this.userRepo.getByEmail(email)
+      if (!userData) throw ERR_NO_ROW
+      const htmlData = fs.readFileSync('./resources/password-reset.html', 'utf8')
+      const template = handlebars.compile(htmlData)
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: {
+          name: 'SPK Estrus - noreply',
+          email: 'noreply@arutek.com',
+        },
+        to: [{
+          name: userData.fullName,
+          email: userData.email,
+        }],
+        subject: 'Password Reset',
+        htmlContent: template({recoveryCode: userData.tokenReset}),
+      }, {
+        headers: {'api-key': Vardec.getString('breevo.apiKey')},
+      })
+      return {message: 'SUCCESS', data: {}}
+    } catch (err) {
+      throw err
+    }
+  }
+  resetPassword = async (param: ResetPassDTO) => {
+    try {
+      param.password = await bcrypt.hash(param.password, 10)
+      await this.userRepo.resetPassword({tokenReset: param.code, password: param.password})
+      return {message: 'SUCCESS', data: {}}
+    } catch (err) {
+      throw err
+    }
   }
 }

@@ -53,6 +53,8 @@ export const initEstrus = (sql: Pool, noSql: Firestore) => {
   router.post('/auth/register/admin', authCtrl.registerAdmin)
   router.post('/auth/register/expert', authCtrl.registerExpert)
   router.post('/auth/login', authCtrl.login)
+  router.post('/auth/recover', authCtrl.requestRecovery)
+  router.post('/auth/reset-pass', authCtrl.resetPassword)
   router.delete('/auth/logout', authCtrl.logout)
 
   router.get('/user', userCtrl.getAllNonAdmin)

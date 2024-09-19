@@ -1,7 +1,7 @@
 import {AuthService} from '@src/apps/estrus-service/services/auth'
 import {Request, Response} from 'express'
 import Joi from 'joi'
-import {RegisterDTO} from './dto'
+import {RegisterDTO, ResetPassDTO} from './dto'
 import {resErr} from '@src/utils/response'
 
 const registerSchema = Joi.object<RegisterDTO>({
@@ -69,6 +69,35 @@ export class RestAuthController {
   logout = async (req: Request, res: Response) => {
     try {
       return res.status(200).send({message: "SUCCESS", data: {}})
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
+  requestRecovery = async (req: Request, res: Response) => {
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+    }).unknown()
+    try {
+      await registerSchema.validateAsync(req.body)
+      const result = await this.authService.requestRecovery(req.body.email)
+      return res.status(200).send(result)
+    } catch (err: any) {
+      const {code, message, data} = resErr(err)
+      res.status(code).send({data, message})
+    }
+  }
+  resetPassword = async (req: Request, res: Response) => {
+    const schema = Joi.object<ResetPassDTO>({
+      code: Joi.string().min(1).required(),
+      password: Joi.string().min(1).required(),
+      confirmPassword: Joi.string().min(1).required(),
+    })
+    try {
+      await registerSchema.validateAsync(req.body)
+      if (req.body.password !== req.body.confirmPassword) throw "password mismatch"
+      const result = await this.authService.resetPassword(req.body)
+      return res.status(200).send(result)
     } catch (err: any) {
       const {code, message, data} = resErr(err)
       res.status(code).send({data, message})
