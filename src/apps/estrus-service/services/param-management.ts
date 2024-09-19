@@ -15,8 +15,8 @@ export class ParamManagementService {
     try {
       const id = await this.dssParamRepo.create(param)
       return {message: 'CREATED', data: {id}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -25,8 +25,8 @@ export class ParamManagementService {
       const res = await this.dssParamRepo.getById(id)
       if (!res) throw ERR_NO_ROW
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -43,8 +43,8 @@ export class ParamManagementService {
         })
       }
       return {message: 'SUCCESS', data: result, count: result.length}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -52,8 +52,8 @@ export class ParamManagementService {
     try {
       await this.dssParamRepo.update(id, param)
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -61,8 +61,8 @@ export class ParamManagementService {
     try {
       await this.dssParamRepo.delete(id)
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

@@ -6,7 +6,7 @@ export class Logger {
   private static instance: Logger
   private readonly log: winston.Logger
 
-  constructor(filename) {
+  constructor(filename: string) {
     const {combine, timestamp, uncolorize, colorize, printf} = winston.format
     const consoleFormat = printf((info) => `[${dayjs().toISOString()}] ${info.level}: ${info.message}`)
     this.log = winston.createLogger({
@@ -29,13 +29,13 @@ export class Logger {
   static init(filename: string) {
     Logger.instance = new Logger(filename)
   }
-  static info(...msgs: string[]) {
+  static info(...msgs: (string|number)[]) {
     Logger.instance.log.info(msgs.join(''))
   }
-  static warn(...msgs: string[]) {
+  static warn(...msgs: (string|number)[]) {
     Logger.instance.log.warn(msgs.join(''))
   }
-  static error(...msgs: string[]) {
+  static error(...msgs: (string|number)[]) {
     Logger.instance.log.error(msgs.join(''))
   }
 }

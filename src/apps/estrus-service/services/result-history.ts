@@ -27,8 +27,8 @@ export class ResultHistoryService {
         })
       }
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -48,8 +48,8 @@ export class ResultHistoryService {
         })
       }
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -58,8 +58,8 @@ export class ResultHistoryService {
       const res = await this.dssResRepo.getById(id)
       if (!res) throw ERR_NO_ROW
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -67,8 +67,8 @@ export class ResultHistoryService {
     try {
       await this.dssResRepo.delete(id)
       return {message: 'DELETED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

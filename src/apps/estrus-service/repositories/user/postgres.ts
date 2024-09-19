@@ -70,7 +70,7 @@ export class PostgresUserRepository implements UserRepository {
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -128,7 +128,7 @@ export class PostgresUserRepository implements UserRepository {
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -186,7 +186,7 @@ export class PostgresUserRepository implements UserRepository {
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -206,7 +206,7 @@ export class PostgresUserRepository implements UserRepository {
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -241,7 +241,7 @@ export class PostgresUserRepository implements UserRepository {
         updatedAt: res.rows[0].created_at,
         deletedAt: res.rows[0].deleted_at,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -270,7 +270,7 @@ export class PostgresUserRepository implements UserRepository {
         })
       }
       return result
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -305,7 +305,7 @@ export class PostgresUserRepository implements UserRepository {
         updatedAt: res.rows[0].created_at,
         deletedAt: res.rows[0].deleted_at,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -342,7 +342,7 @@ export class PostgresUserRepository implements UserRepository {
         updatedAt: res.rows[0].created_at,
         deletedAt: res.rows[0].deleted_at,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -380,7 +380,7 @@ export class PostgresUserRepository implements UserRepository {
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -401,7 +401,7 @@ export class PostgresUserRepository implements UserRepository {
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }

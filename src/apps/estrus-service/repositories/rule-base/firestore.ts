@@ -25,7 +25,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
       const ruleData = await this.getByAndLinguisticCombo(arg.linguisticCombo)
       if (ruleData) throw ERR_DUPLICATE
       await this.noSql.doc(stripDash(uuid())).set(datum)
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -47,7 +47,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
         })
       })
       return res
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -80,7 +80,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
         if (datum.linguisticCombo.length === combo.length) return datum
       }
       return null
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -99,7 +99,7 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
         updatedAt: datum.updatedAt,
         deletedAt: datum.deletedAt,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -118,14 +118,14 @@ export class FirestoreRuleBaseRepository implements RuleBaseRepository {
         updatedAt: dayjs().toISOString(),
         deletedAt: datum.deletedAt,
       })
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
   delete = async (id: string) => {
     try {
       await this.noSql.doc(id).delete()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }

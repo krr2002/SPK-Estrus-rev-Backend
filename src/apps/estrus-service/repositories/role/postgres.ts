@@ -27,7 +27,7 @@ export class PostgresRoleRepository implements RoleRepository {
         updatedAt: res.rows[0].updated_at,
         deletedAt: res.rows[0].deleted_at,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }

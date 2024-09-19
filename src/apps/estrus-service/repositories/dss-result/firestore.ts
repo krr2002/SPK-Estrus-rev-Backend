@@ -24,7 +24,7 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
         updatedAt: dayjs().toISOString(),
         deletedAt: null,
       })
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -47,7 +47,7 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
         })
       })
       return res
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -73,7 +73,7 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
         })
       })
       return res
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -93,14 +93,14 @@ export class FirestoreDSSResultRepository implements DSSResultRepository {
         updatedAt: datum.updatedAt,
         deletedAt: datum.deletedAt,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
   delete = async (id: string) => {
     try {
       await this.noSql.doc(stripDash(id)).delete()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }

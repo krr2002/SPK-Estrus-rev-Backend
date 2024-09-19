@@ -34,8 +34,8 @@ export class AuthService {
         country: "INDONESIA",
       })
       return {message: 'CREATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -52,8 +52,8 @@ export class AuthService {
         country: "INDONESIA",
       })
       return {message: 'CREATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -70,8 +70,8 @@ export class AuthService {
         country: "INDONESIA",
       })
       return {message: 'CREATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -93,8 +93,8 @@ export class AuthService {
       }
       const token = jwt.sign(paylod, Vardec.getString('application.jwtSecret'))
       return {message: 'SUCCESS', data: {token} }
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -121,8 +121,8 @@ export class AuthService {
       if (httpRes.status >= 200 && httpRes.status < 300) return {message: 'SUCCESS', data: {}}
       Logger.error(httpRes.data)
       throw Error('Failed to send email')
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -131,8 +131,8 @@ export class AuthService {
       param.password = await bcrypt.hash(param.password, 10)
       await this.userRepo.resetPassword({tokenReset: param.code, password: param.password})
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

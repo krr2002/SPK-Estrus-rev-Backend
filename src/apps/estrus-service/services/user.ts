@@ -25,8 +25,8 @@ export class UserService {
         subdistrict: res.subdistrict,
         address: res.address,
       }}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -34,8 +34,8 @@ export class UserService {
     try {
       let userData = await this.userRepo.getAllNonAdmin()
       return {message: 'CREATED', data: userData}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -48,8 +48,8 @@ export class UserService {
         country: "INDONESIA",
       })
       return {message: 'UPDATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -57,8 +57,8 @@ export class UserService {
     try {
       await this.userRepo.delete(id)
       return {message: 'DELETED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

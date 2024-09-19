@@ -15,8 +15,8 @@ export class LinguisticManagementService {
     try {
       await this.dssLangRepo.create({paramId: param.paramId, name: param.name, minValue: param.min, maxValue: param.max})
       return {message: 'CREATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -33,8 +33,8 @@ export class LinguisticManagementService {
         })
       }
       return {message: 'SUCCESS', data: res || {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -42,8 +42,8 @@ export class LinguisticManagementService {
     try {
       const res = await this.dssLangRepo.getByIds(ids)
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -51,8 +51,8 @@ export class LinguisticManagementService {
     try {
       await this.dssLangRepo.update(langId, {name: param.name, minValue: param.min, maxValue: param.max})
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -60,8 +60,8 @@ export class LinguisticManagementService {
     try {
       await this.dssLangRepo.delete(langId)
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

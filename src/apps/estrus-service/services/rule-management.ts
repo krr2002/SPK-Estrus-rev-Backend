@@ -15,8 +15,8 @@ export class RuleManagementService {
     try {
       await this.dssRuleRepo.create(param)
       return {message: 'CREATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -34,8 +34,8 @@ export class RuleManagementService {
         })
       }
       return {message: 'CREATED', data: res}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -53,8 +53,8 @@ export class RuleManagementService {
         }
       }
       return {message: 'SUCCESS', data: result || {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -62,8 +62,8 @@ export class RuleManagementService {
     try {
       await this.dssRuleRepo.update(id, param)
       return {message: 'UPDATED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -71,8 +71,8 @@ export class RuleManagementService {
     try {
       await this.dssRuleRepo.delete(id)
       return {message: 'DELETED', data: {}}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

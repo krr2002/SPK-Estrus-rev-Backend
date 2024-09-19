@@ -31,7 +31,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
       const res = await client.query(q)
       client.release()
       return res.rows[0].id
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -59,7 +59,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
         })
       }
       return result
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -92,7 +92,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
         })
       }
       return result
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -135,7 +135,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
         })
       }
       return result
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -161,7 +161,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -175,7 +175,7 @@ export class PostgresDSSLinguisticRepository implements DSSLinguisticRepository 
       const client = await this.pool.connect()
       await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }

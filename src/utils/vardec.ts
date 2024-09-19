@@ -9,7 +9,7 @@ export class Vardec {
     try {
       const data = fs.readFileSync(filePath, 'utf8')
       this.value = JSON.parse(data)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error reading or parsing the file:', error)
       this.value = null
     }

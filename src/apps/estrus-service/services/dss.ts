@@ -38,8 +38,8 @@ export class DSSService {
         return acc
       }, {}))
       return {message: 'SUCCESS', data: groupedData}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -67,8 +67,8 @@ export class DSSService {
         createdBy: stripDash(param.creatorId),
       })
       return {message: 'SUCCESS', data: [ruleData.result]}
-    } catch (err) {
-      if (!isGenericError(err)) Logger.warn(err)
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

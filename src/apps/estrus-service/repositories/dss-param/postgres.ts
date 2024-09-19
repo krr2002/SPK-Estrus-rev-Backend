@@ -25,7 +25,7 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
       const res = await client.query(q)
       client.release()
       return res.rows[0].id
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -51,7 +51,7 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
         })
       }
       return result
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -75,7 +75,7 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
           updatedAt: res.rows[0].updated_at,
           deletedAt: res.rows[0].deleted_at,
       }
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -96,7 +96,7 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
       const client = await this.pool.connect()
       const res = await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
@@ -110,7 +110,7 @@ export class PostgresDSSParamRepository implements DSSParamRepository {
       const client = await this.pool.connect()
       const res = await client.query(q)
       client.release()
-    } catch (err) {
+    } catch (err: any) {
       throw err
     }
   }
