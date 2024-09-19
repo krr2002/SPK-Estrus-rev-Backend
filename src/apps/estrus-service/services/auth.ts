@@ -106,8 +106,8 @@ export class AuthService {
       const template = handlebars.compile(htmlData)
       const httpRes = await axios.post('https://api.brevo.com/v3/smtp/email', {
         sender: {
-          name: 'SPK Estrus - noreply',
-          email: 'noreply@arutek.com',
+          name: Vardec.getString('breevo.sender.name'),
+          email: Vardec.getString('breevo.sender.email'),
         },
         to: [{
           name: userData.fullName,
