@@ -79,7 +79,7 @@ export class RestAuthController {
       email: Joi.string().email().required(),
     }).unknown()
     try {
-      await registerSchema.validateAsync(req.body)
+      await schema.validateAsync(req.body)
       const result = await this.authService.requestRecovery(req.body.email)
       return res.status(200).send(result)
     } catch (err: any) {
@@ -92,9 +92,9 @@ export class RestAuthController {
       code: Joi.string().min(1).required(),
       password: Joi.string().min(1).required(),
       confirmPassword: Joi.string().min(1).required(),
-    })
+    }).unknown()
     try {
-      await registerSchema.validateAsync(req.body)
+      await schema.validateAsync(req.body)
       if (req.body.password !== req.body.confirmPassword) throw "password mismatch"
       const result = await this.authService.resetPassword(req.body)
       return res.status(200).send(result)
