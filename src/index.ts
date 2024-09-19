@@ -4,10 +4,10 @@ import express from 'express'
 import cors from 'cors'
 import {initEstrus} from '@src/apps/estrus-service/init'
 import {firestore} from '@src/utils/firestore'
-import * as handlebars from 'handlebars'
-import fs from 'node:fs'
+import {Logger} from '@src/utils/logger'
 
 const main = async () => {
+  Logger.init('./log/logfile')
   Vardec.init("./config/config.local.json")
 
   const dbSql = await pgPool({
@@ -32,16 +32,16 @@ const main = async () => {
   app.use('/v1', initEstrus(dbSql, dbNoSql))
 
   const server = app.listen(Vardec.getNumber('application.port'))
-  console.log(
+  Logger.info(
     Vardec.getString('application.name'),
     ' Started at port ',
     Vardec.getNumber('application.port'),
   )
 
   process.on('SIGTERM', () => {
-    console.log('SIGTERM signal received: closing HTTP server')
+    Logger.info('SIGTERM signal received: closing HTTP server')
     server.close(() => {
-      console.log('HTTP server closed')
+      Logger.info('HTTP server closed')
     })
   })
 }

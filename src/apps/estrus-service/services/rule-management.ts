@@ -1,6 +1,7 @@
 import {RuleBaseRepository} from '@src/apps/estrus-service/repositories/rule-base/interface'
-import {RestResponseType} from '@src/utils/response'
+import {isGenericError, RestResponseType} from '@src/utils/response'
 import {CreateRuleDTO, ResponseDTO} from '@src/apps/estrus-service/controllers/rule-management/dto'
+import {Logger} from '@src/utils/logger'
 
 
 export class RuleManagementService {
@@ -15,6 +16,7 @@ export class RuleManagementService {
       await this.dssRuleRepo.create(param)
       return {message: 'CREATED', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -33,6 +35,7 @@ export class RuleManagementService {
       }
       return {message: 'CREATED', data: res}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -51,6 +54,7 @@ export class RuleManagementService {
       }
       return {message: 'SUCCESS', data: result || {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -59,6 +63,7 @@ export class RuleManagementService {
       await this.dssRuleRepo.update(id, param)
       return {message: 'UPDATED', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -67,6 +72,7 @@ export class RuleManagementService {
       await this.dssRuleRepo.delete(id)
       return {message: 'DELETED', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }

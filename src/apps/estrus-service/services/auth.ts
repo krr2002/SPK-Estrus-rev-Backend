@@ -1,6 +1,6 @@
 import {UserRepository} from '@src/apps/estrus-service/repositories/user/interface'
 import {LoginDTO, RegisterDTO, ResetPassDTO} from '@src/apps/estrus-service/controllers/auth/dto'
-import {ERR_ACCESS_DENIED, ERR_DUPLICATE, ERR_NO_ROW, RestResponseType} from '@src/utils/response'
+import {ERR_ACCESS_DENIED, ERR_DUPLICATE, ERR_NO_ROW, isGenericError, RestResponseType} from '@src/utils/response'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {Vardec} from '@src/utils/vardec'
@@ -9,6 +9,7 @@ import dayjs, {Dayjs} from 'dayjs'
 import axios from 'axios'
 import fs from 'node:fs'
 import * as handlebars from 'handlebars'
+import {Logger} from '@src/utils/logger'
 
 
 export class AuthService {
@@ -34,6 +35,7 @@ export class AuthService {
       })
       return {message: 'CREATED', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -51,6 +53,7 @@ export class AuthService {
       })
       return {message: 'CREATED', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -68,6 +71,7 @@ export class AuthService {
       })
       return {message: 'CREATED', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -90,6 +94,7 @@ export class AuthService {
       const token = jwt.sign(paylod, Vardec.getString('application.jwtSecret'))
       return {message: 'SUCCESS', data: {token} }
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -99,7 +104,7 @@ export class AuthService {
       if (!userData) throw ERR_NO_ROW
       const htmlData = fs.readFileSync('./resources/password-reset.html', 'utf8')
       const template = handlebars.compile(htmlData)
-      await axios.post('https://api.brevo.com/v3/smtp/email', {
+      const httpRes = await axios.post('https://api.brevo.com/v3/smtp/email', {
         sender: {
           name: 'SPK Estrus - noreply',
           email: 'noreply@arutek.com',
@@ -113,8 +118,11 @@ export class AuthService {
       }, {
         headers: {'api-key': Vardec.getString('breevo.apiKey')},
       })
-      return {message: 'SUCCESS', data: {}}
+      if (httpRes.status >= 200 && httpRes.status < 300) return {message: 'SUCCESS', data: {}}
+      Logger.error(httpRes.data)
+      throw Error('Failed to send email')
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -124,6 +132,7 @@ export class AuthService {
       await this.userRepo.resetPassword({tokenReset: param.code, password: param.password})
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }

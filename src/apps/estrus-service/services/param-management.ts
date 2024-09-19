@@ -1,6 +1,7 @@
 import {DSSParamRepository} from '@src/apps/estrus-service/repositories/dss-param/interface'
-import {ERR_NO_ROW, RestResponseType} from '@src/utils/response'
+import {ERR_NO_ROW, isGenericError, RestResponseType} from '@src/utils/response'
 import {ParamRequestDTO, ParamResultDTO} from '@src/apps/estrus-service/controllers/param-management/dto'
+import {Logger} from '@src/utils/logger'
 
 
 export class ParamManagementService {
@@ -15,6 +16,7 @@ export class ParamManagementService {
       const id = await this.dssParamRepo.create(param)
       return {message: 'CREATED', data: {id}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -24,6 +26,7 @@ export class ParamManagementService {
       if (!res) throw ERR_NO_ROW
       return {message: 'SUCCESS', data: res}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -41,6 +44,7 @@ export class ParamManagementService {
       }
       return {message: 'SUCCESS', data: result, count: result.length}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -49,6 +53,7 @@ export class ParamManagementService {
       await this.dssParamRepo.update(id, param)
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -57,6 +62,7 @@ export class ParamManagementService {
       await this.dssParamRepo.delete(id)
       return {message: 'SUCCESS', data: {}}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }

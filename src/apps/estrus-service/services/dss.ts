@@ -1,9 +1,10 @@
 import {RuleBaseRepository} from '@src/apps/estrus-service/repositories/rule-base/interface'
-import {RestResponseType} from '@src/utils/response'
+import {isGenericError, RestResponseType} from '@src/utils/response'
 import {DSSDTO, DSSParamWithOptionsDTO} from '@src/apps/estrus-service/controllers/dss/dto'
 import {DSSLinguisticRepository} from '@src/apps/estrus-service/repositories/dss-linguistic/interface'
 import {DSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/interface'
 import {stripDash, stripDashAll} from '@src/utils/uuid'
+import {Logger} from '@src/utils/logger'
 
 
 export class DSSService {
@@ -38,6 +39,7 @@ export class DSSService {
       }, {}))
       return {message: 'SUCCESS', data: groupedData}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
@@ -66,6 +68,7 @@ export class DSSService {
       })
       return {message: 'SUCCESS', data: [ruleData.result]}
     } catch (err) {
+      if (!isGenericError()) Logger.warn(err)
       throw err
     }
   }
