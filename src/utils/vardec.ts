@@ -1,4 +1,5 @@
 import * as fs from 'node:fs'
+import {Logger} from '@src/utils/logger'
 
 export class Vardec {
   private static instance: Vardec
@@ -8,7 +9,7 @@ export class Vardec {
     try {
       const data = fs.readFileSync(filePath, 'utf8')
       this.value = JSON.parse(data)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error reading or parsing the file:', error)
       this.value = null
     }
@@ -21,12 +22,10 @@ export class Vardec {
   }
 
   static getString(key: string): string {
-    if (!Vardec.instance) {
-      throw new Error('Vardec has not been initialized. Call initialize() first.');
-    }
     const keys = key.split(".")
     let res: any
     try {
+      if (!Vardec.instance) throw new Error('Vardec has not been initialized. Call Vardec.init() first.');
       for (let i = 0; i < keys.length; i++) {
         if (i === 0) {
           res = Vardec.instance.value[keys[i]]
@@ -34,7 +33,8 @@ export class Vardec {
           res = res[keys[i]]
         }
       }
-    } catch {
+    } catch (err: any) {
+      Logger.error(err.message)
       res = ''
     }
     if (typeof res !== 'string') res = ''
@@ -42,13 +42,11 @@ export class Vardec {
   }
 
   static getNumber(key: string): number {
-    if (!Vardec.instance) {
-      throw new Error('Vardec has not been initialized. Call initialize() first.');
-    }
     const keys = key.split(".")
     let res: any
 
     try {
+      if (!Vardec.instance) throw new Error('Vardec has not been initialized. Call Vardec.init() first.');
       for (let i = 0; i < keys.length; i++) {
         if (i === 0) {
           res = Vardec.instance.value[keys[i]]
@@ -56,7 +54,8 @@ export class Vardec {
           res = res[keys[i]]
         }
       }
-    } catch {
+    } catch (err: any) {
+      Logger.error(err.message)
       res = 0
     }
     if (typeof res !== 'number') res = 0
@@ -64,13 +63,11 @@ export class Vardec {
   }
 
   static getBoolean(key: string): boolean {
-    if (!Vardec.instance) {
-      throw new Error('Vardec has not been initialized. Call initialize() first.');
-    }
     const keys = key.split(".")
     let res: any
 
     try {
+      if (!Vardec.instance) throw new Error('Vardec has not been initialized. Call Vardec.init() first.');
       for (let i = 0; i < keys.length; i++) {
         if (i === 0) {
           res = Vardec.instance.value[keys[i]]
@@ -78,7 +75,8 @@ export class Vardec {
           res = res[keys[i]]
         }
       }
-    } catch {
+    } catch (err: any) {
+      Logger.error(err.message)
       res = false
     }
     if (typeof res !== 'boolean') res = false

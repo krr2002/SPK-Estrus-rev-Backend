@@ -1,6 +1,7 @@
 import {UserRepository} from '@src/apps/estrus-service/repositories/user/interface'
-import {ERR_NO_ROW, RestResponseType} from '@src/utils/response'
+import {ERR_NO_ROW, isGenericError, RestResponseType} from '@src/utils/response'
 import {UpdateDTO} from '@src/apps/estrus-service/controllers/user/dto'
+import {Logger} from '@src/utils/logger'
 
 
 export class UserService {
@@ -24,7 +25,8 @@ export class UserService {
         subdistrict: res.subdistrict,
         address: res.address,
       }}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -32,7 +34,8 @@ export class UserService {
     try {
       let userData = await this.userRepo.getAllNonAdmin()
       return {message: 'CREATED', data: userData}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -45,7 +48,8 @@ export class UserService {
         country: "INDONESIA",
       })
       return {message: 'UPDATED', data: {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -53,7 +57,8 @@ export class UserService {
     try {
       await this.userRepo.delete(id)
       return {message: 'DELETED', data: {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

@@ -16,6 +16,7 @@ export class RestLangManagementController {
       paramId: Joi.string().uuid().required(),
       name: Joi.string().min(1).required(),
       min: Joi.number().required(),
+      max: Joi.number().required(),
     })
     try {
       await schema.validateAsync(req.body)
@@ -52,6 +53,7 @@ export class RestLangManagementController {
     const schema = Joi.object({
       name: Joi.string().min(1).required(),
       min: Joi.number().required(),
+      max: Joi.number().required(),
     }).unknown()
     try {
       await schema.validateAsync(req.body)

@@ -1,8 +1,10 @@
 import {RuleBaseRepository} from '@src/apps/estrus-service/repositories/rule-base/interface'
-import {RestResponseType} from '@src/utils/response'
+import {isGenericError, RestResponseType} from '@src/utils/response'
 import {DSSDTO, DSSParamWithOptionsDTO} from '@src/apps/estrus-service/controllers/dss/dto'
 import {DSSLinguisticRepository} from '@src/apps/estrus-service/repositories/dss-linguistic/interface'
 import {DSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/interface'
+import {stripDash, stripDashAll} from '@src/utils/uuid'
+import {Logger} from '@src/utils/logger'
 
 
 export class DSSService {
@@ -36,16 +38,17 @@ export class DSSService {
         return acc
       }, {}))
       return {message: 'SUCCESS', data: groupedData}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
   // TODO: can only handle AND operator
   run = async (param: DSSDTO & { creatorId: string }): Promise<RestResponseType> => {
     try {
-      const dssCombineData = await this.dssLangRepo.getByIds(param.conditions)
+      const dssCombineData = await this.dssLangRepo.getByIds(stripDashAll(param.conditions))
       if (dssCombineData.length === 0) return {message: 'FAIL', data: ['no ruleset available']}
-      const ruleData = await this.dssRuleRepo.getByAndLinguisticCombo(param.conditions)
+      const ruleData = await this.dssRuleRepo.getByAndLinguisticCombo(stripDashAll(param.conditions))
       if (!ruleData) return {message: 'FAIL', data: ['no ruleset available']}
       const ruleSets = []
       for (const ruleSet of dssCombineData) {
@@ -56,15 +59,16 @@ export class DSSService {
       }
 
       // Concurrently saving the result history and returning the result to client
-      this.dssResRepo.create({
+      await this.dssResRepo.create({
         name: param.specimenName,
         age: param.age,
         condition: ruleSets,
         dssResult: ruleData.result,
-        createdBy: param.creatorId,
+        createdBy: stripDash(param.creatorId),
       })
       return {message: 'SUCCESS', data: [ruleData.result]}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

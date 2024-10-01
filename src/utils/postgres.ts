@@ -15,7 +15,7 @@ export const pgClient = async (cfg: ExtendedClientConfig) => {
     console.log(`Connected to PG ${cfg.database} at ${cfg.host}:${cfg.port}`)
     await conn.end()
     return conn
-  } catch (err) {
+  } catch (err: any) {
     throw err
   }
 }
@@ -27,7 +27,7 @@ export const pgPool = async (cfg: ExtendedPoolConfig) => {
     console.log(`Connected to PG ${cfg.database} at ${cfg.host}:${cfg.port}`)
     client.release()
     return pool
-  } catch (err) {
+  } catch (err: any) {
     throw err
   }
 }

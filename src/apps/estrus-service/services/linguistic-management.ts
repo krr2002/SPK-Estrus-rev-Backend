@@ -1,6 +1,7 @@
-import {RestResponseType} from '@src/utils/response'
+import {isGenericError, RestResponseType} from '@src/utils/response'
 import {CreateDTO, LangResponseDTO, UpdateDTO} from '@src/apps/estrus-service/controllers/linguistic-management/dto'
 import {DSSLinguisticRepository} from '@src/apps/estrus-service/repositories/dss-linguistic/interface'
+import {Logger} from '@src/utils/logger'
 
 
 export class LinguisticManagementService {
@@ -12,9 +13,10 @@ export class LinguisticManagementService {
 
   create = async (param: CreateDTO): Promise<RestResponseType> => {
     try {
-      await this.dssLangRepo.create({paramId: param.paramId, name: param.name, minValue: param.min})
+      await this.dssLangRepo.create({paramId: param.paramId, name: param.name, minValue: param.min, maxValue: param.max})
       return {message: 'CREATED', data: {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -31,7 +33,8 @@ export class LinguisticManagementService {
         })
       }
       return {message: 'SUCCESS', data: res || {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -39,15 +42,17 @@ export class LinguisticManagementService {
     try {
       const res = await this.dssLangRepo.getByIds(ids)
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
   update = async (langId: string, param: UpdateDTO): Promise<RestResponseType> => {
     try {
-      await this.dssLangRepo.update(langId, {name: param.name, minValue: param.min})
+      await this.dssLangRepo.update(langId, {name: param.name, minValue: param.min, maxValue: param.max})
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -55,7 +60,8 @@ export class LinguisticManagementService {
     try {
       await this.dssLangRepo.delete(langId)
       return {message: 'SUCCESS', data: {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }

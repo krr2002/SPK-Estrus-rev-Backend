@@ -24,3 +24,11 @@ export const resErr = (err: any): RestResponseType & {code: number} => {
     message: name,
   }
 }
+
+export const isGenericError = (err: any) => {
+  return [
+    ERR_NO_ROW,
+    ERR_DUPLICATE,
+    ERR_ACCESS_DENIED,
+  ].includes(err)
+}

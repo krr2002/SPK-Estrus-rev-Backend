@@ -1,6 +1,7 @@
-import {ERR_NO_ROW, RestResponseType} from '@src/utils/response'
+import {ERR_NO_ROW, isGenericError, RestResponseType} from '@src/utils/response'
 import {DSSResultRepository} from '@src/apps/estrus-service/repositories/dss-result/interface'
 import {ResultHistoryResponseDTO} from '@src/apps/estrus-service/controllers/result-history/dto'
+import {Logger} from '@src/utils/logger'
 
 
 export class ResultHistoryService {
@@ -26,7 +27,8 @@ export class ResultHistoryService {
         })
       }
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -46,7 +48,8 @@ export class ResultHistoryService {
         })
       }
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -55,7 +58,8 @@ export class ResultHistoryService {
       const res = await this.dssResRepo.getById(id)
       if (!res) throw ERR_NO_ROW
       return {message: 'SUCCESS', data: res}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
@@ -63,7 +67,8 @@ export class ResultHistoryService {
     try {
       await this.dssResRepo.delete(id)
       return {message: 'DELETED', data: {}}
-    } catch (err) {
+    } catch (err: any) {
+      if (!isGenericError(err)) Logger.warn(err.message)
       throw err
     }
   }
